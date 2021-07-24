@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 
 class EditStockAvailableScreen extends StatefulWidget {
-  final String? name, stockCode;
-  final int? quantity, expectedIncome, price;
+  final String name, stockCode, documentID;
+  final int quantity, expectedIncome, price;
   const EditStockAvailableScreen(
       {Key? key,
+      required this.documentID,
       required this.name,
       required this.stockCode,
       required this.expectedIncome,
@@ -26,17 +27,40 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _stockCodeController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
-  TextEditingController _expectedIncomeController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
 
+  int? _quantity = 0, _price = 0, _expectedIncome = 0;
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.name!;
-    _stockCodeController.text = widget.stockCode!;
-    _quantityController.text = widget.quantity!.toString();
-    _expectedIncomeController.text = widget.expectedIncome!.toString();
-    _priceController.text = widget.price!.toString();
+    _nameController.text = widget.name;
+    _stockCodeController.text = widget.stockCode;
+    _quantityController.text = widget.quantity.toString();
+    _priceController.text = widget.price.toString();
+    _expectedIncome = widget.expectedIncome;
+    _quantity = int.parse(_quantityController.text);
+    _price = int.parse(_priceController.text);
+    _quantityController.addListener(() {
+      setState(() {
+        _quantity = int.parse(_quantityController.text);
+      });
+      _priceController.addListener(() {
+        setState(() {
+          _price = int.parse(_priceController.text);
+        });
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _priceController.removeListener(() { });
+    _stockCodeController.removeListener(() { });
+    _nameController.dispose();
+    _stockCodeController.dispose();
+    _priceController.dispose();
+    _quantityController.dispose();
+    super.dispose();
   }
 
   @override
@@ -140,8 +164,7 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
                     Text('Ekspektasi Keuntungan :'),
                     Text(
                       NumberFormat.currency(name: 'IDR ').format(
-                        (int.tryParse(_quantityController.text)! *
-                            int.tryParse(_priceController.text)!),
+                        (int.parse(_quantityController.text) * int.parse(_priceController.text)),
                       ),
                     ),
                   ],
@@ -160,7 +183,22 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
                           primary: Colors.red.shade700,
                         ),
                         onPressed: () async {
-
+                          print('click click');
+                          String? _name = _nameController.text;
+                          String? _stockCode = _stockCodeController.text;
+                          _expectedIncome = _quantity! * _price!;
+                          try {
+                            await appState.editStockAvailableFirestore(
+                                name: _name,
+                                stockCode: _stockCode,
+                                expectedIncome: _expectedIncome,
+                                quantity: _quantity,
+                                price: _price,
+                                documentID: widget.documentID);
+                            Navigator.of(context).pop();
+                          } catch (e) {
+                            print(e.toString());
+                          }
                           // _expectedIncome = _quantity! * _price!;
                           // if (_inputNewStockGlobalKey.currentState!
                           //     .validate()) {

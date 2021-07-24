@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ class StockAvailableListView extends StatefulWidget {
 
 class _StockAvailableListViewState extends State<StockAvailableListView> {
   FirebaseFirestore db = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
@@ -29,6 +32,7 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
             .orderBy('created_at', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
+          print(snapshot);
           List<StockAvailable> _stockAvailableList = [];
           if (snapshot.hasError) {
             print(snapshot.error.toString());
@@ -87,11 +91,13 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       EditStockAvailableScreen(
-                                          name: stock.name,
-                                          stockCode: stock.stockCode,
-                                          expectedIncome: stock.expectedIncome,
-                                          price: stock.price,
-                                          quantity: stock.quantity),
+                                    name: stock.name!,
+                                    stockCode: stock.stockCode!,
+                                    expectedIncome: stock.expectedIncome!,
+                                    price: stock.price!,
+                                    quantity: stock.quantity!,
+                                    documentID: document.reference.id,
+                                  ),
                                 ),
                               );
                             },
@@ -161,5 +167,10 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
