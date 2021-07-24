@@ -78,6 +78,26 @@ class ApplicationState extends ChangeNotifier {
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
+
+  Future<DocumentReference> addNewSupplier({
+    required String? personName,
+    required String? companyName,
+    required String? phoneNumber,
+    required String? companyAddress,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('supplier-list')
+        .add({
+      'nama supplier': personName,
+      'nama perusahaan': companyName,
+      'nomor supplier': phoneNumber,
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
 }
 
 
