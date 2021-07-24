@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
+import 'package:test_aplikasi_tugas_akhir/edit_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
 
 class StockAvailableListView extends StatefulWidget {
@@ -55,7 +56,7 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
           }).toList();
           _stockAvailableList
               .sort((b, a) => a.created_at!.compareTo(b.created_at!));
-              print(_stockAvailableList);
+          print(_stockAvailableList);
           return ListView.builder(
             itemCount: _stockAvailableList.length,
             physics: BouncingScrollPhysics(),
@@ -81,6 +82,18 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                             icon: Icons.edit,
                             onTap: () {
                               print('edit clicked');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditStockAvailableScreen(
+                                          name: stock.name,
+                                          stockCode: stock.stockCode,
+                                          expectedIncome: stock.expectedIncome,
+                                          price: stock.price,
+                                          quantity: stock.quantity),
+                                ),
+                              );
                             },
                           ),
                           IconSlideAction(
@@ -130,9 +143,7 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                     flex: 3,
                                     child: Text(NumberFormat.currency(
                                             locale: 'in ', decimalDigits: 0)
-                                        .format(appState
-                                            .stockAvailableList[index]
-                                            .expectedIncome!)
+                                        .format(stock.expectedIncome)
                                         .toString()),
                                   ),
                                 ],
