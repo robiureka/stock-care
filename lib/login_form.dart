@@ -20,7 +20,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   String? _email, _password, _username;
   String error = '';
-  bool? isOwner = false;
+  bool? isOwner;
 
   @override
   void initState() {
@@ -120,6 +120,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                         isOwner = await getUserByRole(userOrError.uid);
                         print(userOrError);
                         appState.setusername = userOrError.displayName;
+                        // appState.getAllUserStocks(userOrError.uid);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

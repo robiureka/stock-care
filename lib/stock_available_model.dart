@@ -1,9 +1,9 @@
 class StockAvailable {
   String? name, stockCode;
-  int? quantity, expectedIncome;
+  int? quantity, expectedIncome, price, created_at;
 
   StockAvailable(
-      {this.name, this.stockCode, this.quantity, this.expectedIncome});
+      {this.name, this.stockCode, this.quantity,this.created_at, this.expectedIncome, this.price});
 }
 
 // List<StockAvailable> stockAvailableList = [

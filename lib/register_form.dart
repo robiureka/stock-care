@@ -14,7 +14,7 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _email = '', _password = '', _confirmPassword = '', username = '';
-  bool isOwner = false;
+  bool? isOwner;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
