@@ -118,15 +118,16 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                         userOrError =
                             await _auth.signInUser(_email!, _password!);
                         isOwner = await getUserByRole(userOrError.uid);
+                        print(isOwner);
                         print(userOrError);
                         appState.setusername = userOrError.displayName;
                         // appState.getAllUserStocks(userOrError.uid);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => (isOwner == false)
-                                    ? SupplierHomeScreen()
-                                    : HomeScreen()));
+                                builder: (context) => (isOwner == true)
+                                    ? HomeScreen()
+                                    : SupplierHomeScreen()));
                         _loginFormKey.currentState!.reset();
                       } catch (e) {
                         return showDialog(

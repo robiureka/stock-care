@@ -5,6 +5,7 @@ import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/home.dart';
 import 'package:test_aplikasi_tugas_akhir/home_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/login_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/wrapper.dart';
 
 void main() async {
@@ -25,6 +26,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-        home: Wrapper());
+        home: SupplierScreen());
   }
 }

@@ -21,15 +21,13 @@ class _StockAvailableTabViewState extends State<StockAvailableTabView> {
   final db = FirebaseFirestore.instance;
   String filter = '';
   Timer? debouncer;
-  final GlobalKey<FormState> _searchKey = GlobalKey<FormState>();
-  TextEditingController _searchFormController = TextEditingController();
   @override
   void initState() {
     super.initState();
   }
 
   void debounce(VoidCallback callback,
-      {Duration duration = const Duration(microseconds: 1000)}) {
+      {Duration duration = const Duration(milliseconds: 1000)}) {
     if (debouncer != null) {
       debouncer!.cancel();
     }
@@ -49,10 +47,12 @@ class _StockAvailableTabViewState extends State<StockAvailableTabView> {
                       Expanded(
                         flex: 5,
                         child: TextField(
-                          onChanged: (String? value) {
-                            setState(() {
-                              filter = value!;
-                              print(filter);
+                          onChanged: (String? value) async {
+                            debounce(() async {
+                              setState(() {
+                                this.filter = value!;
+                                print(filter);
+                              });
                             });
                           },
                           decoration: InputDecoration(
@@ -89,8 +89,6 @@ class _StockAvailableTabViewState extends State<StockAvailableTabView> {
 
   @override
   void dispose() {
-    debouncer?.cancel();
-    _searchFormController.dispose();
     super.dispose();
   }
 }

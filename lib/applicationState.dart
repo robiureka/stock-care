@@ -10,21 +10,22 @@ class ApplicationState extends ChangeNotifier {
   StreamSubscription<QuerySnapshot>? _stockAvailableSubscription;
   String _filter = '';
   List<StockAvailable> _stockAvailableList = [];
-  List<StockAvailable> get stockAvailableList{
+  List<StockAvailable> get stockAvailableList {
     return _stockAvailableList;
-  } 
+  }
 
-  set setStockAvailableList(List<StockAvailable> stockAvailableList){
+  set setStockAvailableList(List<StockAvailable> stockAvailableList) {
     _stockAvailableList = stockAvailableList;
     notifyListeners();
   }
+
   String get getEmail => _email!;
 
   String get getUsername => _username!;
 
   String get filter => _filter;
 
-  set setFilter(String filter){
+  set setFilter(String filter) {
     _filter = filter;
     notifyListeners();
   }
@@ -36,25 +37,6 @@ class ApplicationState extends ChangeNotifier {
 
   set setusername(String? username) {
     _username = username;
-    notifyListeners();
-  }
-
-  void addStockAvailable({
-    required String? name,
-    required String? stockCode,
-    required int? expectedIncome,
-    required int? quantity,
-  }) {
-    _stockAvailableList.add(StockAvailable(
-        expectedIncome: expectedIncome,
-        name: name,
-        quantity: quantity,
-        stockCode: stockCode));
-    notifyListeners();
-  }
-
-  void deleteStockAvailable(int index) {
-    _stockAvailableList.remove(_stockAvailableList[index]);
     notifyListeners();
   }
 
@@ -72,10 +54,31 @@ class ApplicationState extends ChangeNotifier {
       'harga satuan': price,
       'ekspektasi keuntungan': expectedIncome,
       'uid': FirebaseAuth.instance.currentUser!.uid,
-      'created_at' : DateTime.now().millisecondsSinceEpoch,
+      'created_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
 
+  Future<void> editStockAvailableFirestore({
+    required String? name,
+    required String? stockCode,
+    required int? expectedIncome,
+    required int? quantity,
+    required int? price,
+    required String? documentID,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('available-stocks')
+        .doc(documentID)
+        .update({
+      'nama barang': name,
+      'kode barang': stockCode,
+      'kuantitas': quantity,
+      'harga satuan': price,
+      'ekspektasi keuntungan': expectedIncome,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+}
 
 
   // void getAllUserStocks(String uid) {
@@ -95,7 +98,6 @@ class ApplicationState extends ChangeNotifier {
   //     notifyListeners();
   //   });
   // }
-}
 
 // FirebaseFirestore.instance.collection('users').doc(_auth.currentUser!.uid).collection('available-stocks').add({
 //       'nama barang' : name,
@@ -105,3 +107,22 @@ class ApplicationState extends ChangeNotifier {
 //       'uid' : _auth.currentUser!.uid,
 //       'timestamps' : DateTime.now().millisecondsSinceEpoch,
 //     });
+
+  // void addStockAvailable({
+  //   required String? name,
+  //   required String? stockCode,
+  //   required int? expectedIncome,
+  //   required int? quantity,
+  // }) {
+  //   _stockAvailableList.add(StockAvailable(
+  //       expectedIncome: expectedIncome,
+  //       name: name,
+  //       quantity: quantity,
+  //       stockCode: stockCode));
+  //   notifyListeners();
+  // }
+
+  // void deleteStockAvailable(int index) {
+  //   _stockAvailableList.remove(_stockAvailableList[index]);
+  //   notifyListeners();
+  // }
