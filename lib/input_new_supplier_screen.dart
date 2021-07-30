@@ -76,7 +76,6 @@ class _InputNewSupplierScreenState extends State<InputNewSupplierScreen> {
                   height: 15.0,
                 ),
                 TextFormField(
-                  keyboardType: TextInputType.number,
                   onChanged: (String? value) {
                     setState(() {
                       _phoneNumber = value!;
@@ -93,6 +92,8 @@ class _InputNewSupplierScreenState extends State<InputNewSupplierScreen> {
                   validator: (String? value) {
                     if (value == '' || value!.isEmpty) {
                       return 'Mohon isi Nomor Telepon';
+                    } else if(value[0] != '+'){
+                      return 'Mohon awali dengan +62';
                     }
                   },
                 ),

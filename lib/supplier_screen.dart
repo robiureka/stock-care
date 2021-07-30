@@ -1,7 +1,9 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:test_aplikasi_tugas_akhir/edit_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
@@ -16,7 +18,6 @@ class SupplierScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Supplier'),
       ),
-      drawer: OwnerDrawer(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -31,6 +32,7 @@ class SupplierScreen extends StatelessWidget {
             stream: db
                 .collection(
                     'users/${FirebaseAuth.instance.currentUser!.uid}/supplier-list')
+                    .orderBy('nama supplier', descending: false)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -41,7 +43,6 @@ class SupplierScreen extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
-              print(snapshot.data.toString());
               List<Supplier> _supplierList = [];
               _supplierList = snapshot.data!.docs.map((element) {
                 Map<String, dynamic> data =
@@ -53,9 +54,11 @@ class SupplierScreen extends StatelessWidget {
                   companyAddress: data['alamat perusahaan'],
                 );
               }).toList();
+              // _supplierList.sort((a,b) => a.personName!.compareTo(b.personName!));
               return (_supplierList.isEmpty)
                   ? Center(child: Text('Kosong'))
                   : ListView.builder(
+                    physics: BouncingScrollPhysics(),
                       itemCount: _supplierList.length,
                       itemBuilder: (context, index) {
                         Supplier supplier = _supplierList[index];
@@ -74,7 +77,25 @@ class SupplierScreen extends StatelessWidget {
                                     color: Colors.green,
                                     caption: 'edit',
                                     foregroundColor: Colors.white,
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditSupplierScreen(
+                                                  personName:
+                                                      supplier.personName,
+                                                  companyName:
+                                                      supplier.companyName,
+                                                  phoneNumber:
+                                                      supplier.phoneNumber,
+                                                  companyAddress:
+                                                      supplier.companyAddress,
+                                                  documentID:
+                                                      document.reference.id),
+                                        ),
+                                      );
+                                    },
                                     closeOnTap: true,
                                   ),
                                   IconSlideAction(
@@ -82,13 +103,19 @@ class SupplierScreen extends StatelessWidget {
                                     color: Colors.red,
                                     caption: 'delete',
                                     foregroundColor: Colors.white,
-                                    onTap: () {},
+                                    onTap: () async {
+                                      await document.reference.delete();
+                                      _supplierList.remove(document.reference.id);
+                                    },
                                     closeOnTap: true,
                                   ),
                                 ],
                                 child: ListTile(
                                   title: Text(supplier.personName!),
                                   subtitle: Text(supplier.phoneNumber!),
+                                  onTap: () {
+
+                                  },
                                 ),
                               ),
                             ),
