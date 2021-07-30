@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
+import 'package:test_aplikasi_tugas_akhir/supplier_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 
 class SupplierScreen extends StatelessWidget {
@@ -32,7 +32,7 @@ class SupplierScreen extends StatelessWidget {
             stream: db
                 .collection(
                     'users/${FirebaseAuth.instance.currentUser!.uid}/supplier-list')
-                    .orderBy('nama supplier', descending: false)
+                .orderBy('nama supplier', descending: false)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -52,13 +52,15 @@ class SupplierScreen extends StatelessWidget {
                   companyName: data['nama perusahaan'],
                   phoneNumber: data['nomor supplier'],
                   companyAddress: data['alamat perusahaan'],
+                  createdAt: data['created_at'],
+                  updatedAt: data['updated_at'],
                 );
               }).toList();
               // _supplierList.sort((a,b) => a.personName!.compareTo(b.personName!));
               return (_supplierList.isEmpty)
                   ? Center(child: Text('Kosong'))
                   : ListView.builder(
-                    physics: BouncingScrollPhysics(),
+                      physics: BouncingScrollPhysics(),
                       itemCount: _supplierList.length,
                       itemBuilder: (context, index) {
                         Supplier supplier = _supplierList[index];
@@ -105,7 +107,8 @@ class SupplierScreen extends StatelessWidget {
                                     foregroundColor: Colors.white,
                                     onTap: () async {
                                       await document.reference.delete();
-                                      _supplierList.remove(document.reference.id);
+                                      _supplierList
+                                          .remove(document.reference.id);
                                     },
                                     closeOnTap: true,
                                   ),
@@ -114,7 +117,24 @@ class SupplierScreen extends StatelessWidget {
                                   title: Text(supplier.personName!),
                                   subtitle: Text(supplier.phoneNumber!),
                                   onTap: () {
-
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SupplierDetailScreen(
+                                                  personName:
+                                                      supplier.personName,
+                                                  companyName:
+                                                      supplier.companyName,
+                                                  phoneNumber:
+                                                      supplier.phoneNumber,
+                                                  companyAddress:
+                                                      supplier.companyAddress,
+                                                  createdAt:
+                                                      supplier.createdAt!,
+                                                  updatedAt:
+                                                      supplier.updatedAt!,
+                                                )));
                                   },
                                 ),
                               ),
