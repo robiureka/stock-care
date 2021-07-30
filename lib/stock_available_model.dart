@@ -3,7 +3,12 @@ class StockAvailable {
   int? quantity, expectedIncome, price, created_at;
 
   StockAvailable(
-      {this.name, this.stockCode, this.quantity,this.created_at, this.expectedIncome, this.price});
+      {this.name,
+      this.stockCode,
+      this.quantity,
+      this.created_at,
+      this.expectedIncome,
+      this.price});
 }
 
 // List<StockAvailable> stockAvailableList = [

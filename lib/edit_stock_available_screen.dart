@@ -54,8 +54,8 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
 
   @override
   void dispose() {
-    _priceController.removeListener(() { });
-    _stockCodeController.removeListener(() { });
+    _priceController.removeListener(() {});
+    _stockCodeController.removeListener(() {});
     _nameController.dispose();
     _stockCodeController.dispose();
     _priceController.dispose();
@@ -164,7 +164,8 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
                     Text('Ekspektasi Keuntungan :'),
                     Text(
                       NumberFormat.currency(name: 'IDR ').format(
-                        (int.parse(_quantityController.text) * int.parse(_priceController.text)),
+                        (int.parse(_quantityController.text) *
+                            int.parse(_priceController.text)),
                       ),
                     ),
                   ],
@@ -183,21 +184,22 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
                           primary: Colors.red.shade700,
                         ),
                         onPressed: () async {
-                          print('click click');
-                          String? _name = _nameController.text;
-                          String? _stockCode = _stockCodeController.text;
-                          _expectedIncome = _quantity! * _price!;
-                          try {
-                            await appState.editStockAvailableFirestore(
-                                name: _name,
-                                stockCode: _stockCode,
-                                expectedIncome: _expectedIncome,
-                                quantity: _quantity,
-                                price: _price,
-                                documentID: widget.documentID);
-                            Navigator.of(context).pop();
-                          } catch (e) {
-                            print(e.toString());
+                          if (_editStockGlobalKey.currentState!.validate()) {
+                            String? _name = _nameController.text;
+                            String? _stockCode = _stockCodeController.text;
+                            _expectedIncome = _quantity! * _price!;
+                            try {
+                              await appState.editStockAvailableFirestore(
+                                  name: _name,
+                                  stockCode: _stockCode,
+                                  expectedIncome: _expectedIncome,
+                                  quantity: _quantity,
+                                  price: _price,
+                                  documentID: widget.documentID);
+                              Navigator.of(context).pop();
+                            } catch (e) {
+                              print(e.toString());
+                            }
                           }
                           // _expectedIncome = _quantity! * _price!;
                           // if (_inputNewStockGlobalKey.currentState!

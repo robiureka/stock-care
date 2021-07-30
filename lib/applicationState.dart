@@ -93,6 +93,7 @@ class ApplicationState extends ChangeNotifier {
       'nama supplier': personName,
       'nama perusahaan': companyName,
       'nomor supplier': phoneNumber,
+      'alamat perusahaan': companyAddress,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
