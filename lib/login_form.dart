@@ -60,8 +60,8 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                 return null;
               },
               decoration: InputDecoration(
-                hintText: 'Your Username',
-                icon: Icon(Icons.account_circle),
+                hintText: 'Your Email',
+                icon: Icon(Icons.email),
                 contentPadding: EdgeInsets.all(10),
                 border: InputBorder.none,
               ),
