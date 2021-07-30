@@ -28,7 +28,7 @@ class _WrapperState extends State<Wrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return (user != null && isOwner == true) ? HomeScreen() : (user != null && isOwner == false) ? SupplierHomeScreen() : LoginScreen();
+    return (user != null && isOwner == true) ? HomeScreen() : LoginScreen();
   }
 }
 

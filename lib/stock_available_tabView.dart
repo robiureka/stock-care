@@ -47,6 +47,7 @@ class _StockAvailableTabViewState extends State<StockAvailableTabView> {
                       Expanded(
                         flex: 5,
                         child: TextField(
+                          
                           onChanged: (String? value) async {
                             debounce(() async {
                               setState(() {
@@ -56,6 +57,7 @@ class _StockAvailableTabViewState extends State<StockAvailableTabView> {
                             });
                           },
                           decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.search),
                             hintText: 'Search...',
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 15.0),
@@ -65,15 +67,7 @@ class _StockAvailableTabViewState extends State<StockAvailableTabView> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: IconButton(
-                          onPressed: () {
-                            print(filter);
-                          },
-                          icon: Icon(Icons.search),
-                        ),
-                      ),
+                  
                     ],
                   ),
                 ),

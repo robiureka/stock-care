@@ -33,6 +33,7 @@ class OwnerDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+
             leading: Icon(Icons.dashboard),
             title: Text('My Stock'),
             onTap: () {
@@ -48,6 +49,7 @@ class OwnerDrawer extends StatelessWidget {
               print('Supplier clicked');
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SupplierScreen()));
+                
             },
           ),
           SizedBox(height: 10.0),

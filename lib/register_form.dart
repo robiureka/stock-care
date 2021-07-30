@@ -13,8 +13,8 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _email = '', _password = '', _confirmPassword = '', username = '';
-  bool? isOwner;
+  String _email = '', _password = '', _confirmPassword = '', username = '', phoneNumber = '', address = '';
+  bool? isOwner = true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
@@ -31,9 +31,11 @@ class _SignUpFormState extends State<SignUpForm> {
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0,),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
+                
               ),
               labelText: 'Email',
               hintText: "example@example.com",
@@ -59,7 +61,7 @@ class _SignUpFormState extends State<SignUpForm> {
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0,),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -74,32 +76,6 @@ class _SignUpFormState extends State<SignUpForm> {
             },
           ),
           SizedBox(height: 18),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Radio(
-                value: true,
-                groupValue: isOwner,
-                onChanged: (bool? val) {
-                  setState(() {
-                    isOwner = val!;
-                  });
-                },
-              ),
-              Text('Pemilik Toko'),
-              Radio(
-                value: false,
-                groupValue: isOwner,
-                onChanged: (bool? val) {
-                  setState(() {
-                    isOwner = val!;
-                  });
-                },
-              ),
-              Text('Distributor'),
-            ],
-          ),
-          SizedBox(height: 18),
           TextFormField(
             onChanged: (String? value) {
               setState(() {
@@ -109,7 +85,7 @@ class _SignUpFormState extends State<SignUpForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             obscureText: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0,),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               labelText: 'Password',
@@ -134,7 +110,7 @@ class _SignUpFormState extends State<SignUpForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             obscureText: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0,),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               labelText: 'Confirm Password',
@@ -145,6 +121,54 @@ class _SignUpFormState extends State<SignUpForm> {
                 return 'Please Enter to confirm the Password';
               } else if (_confirmPassword != _password) {
                 return 'Please Enter the Password correctly';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 18),
+          TextFormField(
+            onSaved: (String? value) {
+              setState(() {
+                phoneNumber = value!;
+              });
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0,),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              labelText: 'Nomor Telepon',
+              hintText: "Nomor Telepon",
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please Enter Your Nomor Telepon';
+              } else if (value[0] != '+'){
+                return 'Please Start With +62';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 18),
+          TextFormField(
+            onSaved: (String? value) {
+              setState(() {
+                address = value!;
+              });
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0,),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              labelText: 'Alamat',
+              hintText: "Alamat",
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please Enter Your Alamat';
               }
               return null;
             },
@@ -189,6 +213,8 @@ class _SignUpFormState extends State<SignUpForm> {
                             'email': _email,
                             'uid': result.uid,
                             'isOwner': isOwner,
+                            'nomor telepon': phoneNumber,
+                            'alamat': address,
                           });
                         } catch (e) {
                           print(e.toString());

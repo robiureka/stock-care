@@ -56,7 +56,8 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
           }).where((element) {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
-            return stockCodeLower.contains(filterLower);
+            final nameLower = element.name!.toLowerCase();
+            return stockCodeLower.contains(filterLower) || nameLower.contains(filterLower);
           }).toList();
           _stockAvailableList
               .sort((b, a) => a.created_at!.compareTo(b.created_at!));

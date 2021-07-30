@@ -7,9 +7,15 @@ import 'package:test_aplikasi_tugas_akhir/input_new_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SupplierScreen extends StatelessWidget {
   const SupplierScreen({Key? key}) : super(key: key);
+
+  void launchWhatsapp({required String number, required String message}) async {
+    String url = "whatsapp://send?phone=$number&text=$message";
+    await canLaunch(url) ? launch(url) : print("Tidak Bisa Membuka WhatsApp");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +122,9 @@ class SupplierScreen extends StatelessWidget {
                                 child: ListTile(
                                   title: Text(supplier.personName!),
                                   subtitle: Text(supplier.phoneNumber!),
+                                  onLongPress: () {
+                                    launchWhatsapp(number: supplier.phoneNumber!, message: 'Saya ingin membuat order barang:');
+                                  },
                                   onTap: () {
                                     Navigator.push(
                                         context,
@@ -130,10 +139,6 @@ class SupplierScreen extends StatelessWidget {
                                                       supplier.phoneNumber,
                                                   companyAddress:
                                                       supplier.companyAddress,
-                                                  createdAt:
-                                                      supplier.createdAt!,
-                                                  updatedAt:
-                                                      supplier.updatedAt!,
                                                 )));
                                   },
                                 ),

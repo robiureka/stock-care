@@ -38,7 +38,7 @@ class _EditSupplierScreenState extends State<EditSupplierScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Supplier Baru'),
+        title: Text('Ubah Data Supplier'),
       ),
       body: SingleChildScrollView(
         child: Container(

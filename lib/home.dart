@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         floatingActionButton: _bottomButtons(),
         appBar: AppBar(
-          title: Text('Home'),
+          title: Text('My Stock'),
           centerTitle: true,
           actions: <Widget>[
             IconButton(

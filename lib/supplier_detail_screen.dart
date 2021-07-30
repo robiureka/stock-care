@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 
 class SupplierDetailScreen extends StatelessWidget {
   final String? personName, companyName, phoneNumber, companyAddress;
-  final int createdAt, updatedAt;
   const SupplierDetailScreen({
     Key? key,
     required this.personName,
     required this.companyName,
     required this.phoneNumber,
     required this.companyAddress,
-    required this.createdAt,
-    required this.updatedAt,
   }) : super(key: key);
 
   @override
