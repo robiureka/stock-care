@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,28 +5,28 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/edit_stock_available_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/edit_stock_in_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_in_detail_screen.dart';
 
-class StockAvailableListView extends StatefulWidget {
+class StockInListView extends StatefulWidget {
   final String filter;
-  const StockAvailableListView({Key? key, required this.filter})
-      : super(key: key);
+  const StockInListView({Key? key, required this.filter}) : super(key: key);
 
   @override
-  _StockAvailableListViewState createState() => _StockAvailableListViewState();
+  _StockInListViewState createState() => _StockInListViewState();
 }
 
-class _StockAvailableListViewState extends State<StockAvailableListView> {
+class _StockInListViewState extends State<StockInListView> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  List<Stock> _stockAvailableList = [];
+  List<Stock> _stockInList = [];
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
       builder: (context, appState, _) => StreamBuilder<QuerySnapshot>(
         stream: db
-            .collection('available-stocks')
+            .collection('stock-in')
             .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .orderBy('created_at', descending: true)
             .snapshots(),
@@ -43,41 +41,54 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
             return Center(child: CircularProgressIndicator());
           }
 
-          _stockAvailableList = snapshot.data!.docs.map((e) {
+          _stockInList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
-            return Stock.available(
-              expectedIncome: data['ekspektasi keuntungan'],
-              name: data['nama barang'],
-              price: data['harga satuan'],
-              quantity: data['kuantitas'],
-              stockCode: data['kode barang'],
-              createdAt: data['created_at'],
-            );
+
+            return Stock.masuk(
+                outflows: data['dana keluar'],
+                name: data['nama barang'],
+                price: data['harga satuan'],
+                quantity: data['kuantitas'],
+                supplierName: data['nama supplier'],
+                stockCode: data['kode barang'],
+                createdAt: data['created_at'],
+                updatedAt: data['updated_at']);
           }).where((element) {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
             final nameLower = element.name!.toLowerCase();
-            return stockCodeLower.contains(filterLower) || nameLower.contains(filterLower);
+            return stockCodeLower.contains(filterLower) ||
+                nameLower.contains(filterLower);
           }).toList();
-          _stockAvailableList
-              .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          print(_stockAvailableList);
-          return (_stockAvailableList.isEmpty)
+          _stockInList.sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
+          print(_stockInList);
+          return (_stockInList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
                 )
               : ListView.builder(
-                  itemCount: _stockAvailableList.length,
+                  itemCount: _stockInList.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Stock stock = _stockAvailableList[index];
+                    Stock stock = _stockInList[index];
                     DocumentSnapshot document = snapshot.data!.docs[index];
                     return Container(
                       padding: EdgeInsets.all(5.0),
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
                       child: InkWell(
                         onTap: () {
-                          print('hello');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => StockInDetailScreen(
+                                      name: stock.name,
+                                      stockCode: stock.stockCode,
+                                      supplierName: stock.supplierName,
+                                      quantity: stock.quantity,
+                                      price: stock.price,
+                                      outflows: stock.outflows,
+                                      createdAt: stock.createdAt,
+                                      updatedAt: stock.updatedAt)));
                         },
                         child: Card(
                           child: ClipRRect(
@@ -94,11 +105,11 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditStockAvailableScreen(
+                                        builder: (context) => EditStockInScreen(
+                                          supplierName: stock.supplierName!,
                                           name: stock.name!,
                                           stockCode: stock.stockCode!,
-                                          expectedIncome: stock.expectedIncome!,
+                                          outflows: stock.outflows!,
                                           price: stock.price!,
                                           quantity: stock.quantity!,
                                           documentID: document.reference.id,
@@ -113,8 +124,7 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                   icon: Icons.delete,
                                   onTap: () async {
                                     await document.reference.delete();
-                                    _stockAvailableList
-                                        .remove(document.reference.id);
+                                    _stockInList.remove(document.reference.id);
                                   },
                                 ),
                               ],
@@ -129,6 +139,10 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                       height: 8.0,
                                     ),
                                     Text(stock.stockCode!),
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    Text(stock.supplierName!),
                                     SizedBox(
                                       height: 8.0,
                                     ),
@@ -149,14 +163,14 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                       children: <Widget>[
                                         Flexible(
                                           flex: 3,
-                                          child: Text('Ekspektasi Keuntungan'),
+                                          child: Text('Dana Keluar'),
                                         ),
                                         Flexible(
                                           flex: 3,
                                           child: Text(NumberFormat.currency(
                                                   locale: 'in ',
                                                   decimalDigits: 0)
-                                              .format(stock.expectedIncome)
+                                              .format(stock.outflows)
                                               .toString()),
                                         ),
                                       ],
@@ -174,10 +188,5 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
         },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

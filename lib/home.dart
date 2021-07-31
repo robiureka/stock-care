@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_aplikasi_tugas_akhir/auth.dart';
-import 'package:test_aplikasi_tugas_akhir/input_new_stock_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/input_new_stock_in_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/login_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_tabView.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_in_tabView.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_out_tabView.dart';
-import 'package:test_aplikasi_tugas_akhir/supplier_screen.dart';
 
 AuthService _auth = AuthService();
 User? currentUser = FirebaseAuth.instance.currentUser;
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _bottomButtons() {
-    return selectedIndex == 1
+    return (selectedIndex == 1)
         ? FloatingActionButton.extended(
             onPressed: () {
               Navigator.push(
@@ -92,15 +93,21 @@ class _HomeScreenState extends State<HomeScreen>
             icon: Icon(Icons.add),
             label: Text('Stok Tersedia'),
           )
-        : FloatingActionButton.extended(
-            icon: Icon(Icons.people),
-            label: Text('supplier'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SupplierScreen()),
+        : (selectedIndex == 0)
+            ? FloatingActionButton.extended(
+                icon: Icon(Icons.add),
+                label: Text('Stok Masuk'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => InputNewStockInScreen()),
+                  );
+                },
+              )
+            : FloatingActionButton.extended(
+                onPressed: () {},
+                label: Text('Stok Keluar'),
+                icon: Icon(Icons.add),
               );
-            },
-          );
   }
 }

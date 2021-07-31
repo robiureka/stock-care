@@ -4,17 +4,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 
 class ApplicationState extends ChangeNotifier {
   String? _email = 'unknown', _username = "no name";
   StreamSubscription<QuerySnapshot>? _stockAvailableSubscription;
   String _filter = '';
-  List<StockAvailable> _stockAvailableList = [];
-  List<StockAvailable> get stockAvailableList {
+  List<Stock> _stockAvailableList = [];
+  List<Stock> get stockAvailableList {
     return _stockAvailableList;
   }
 
-  set setStockAvailableList(List<StockAvailable> stockAvailableList) {
+  List<String> _supplierList = [];
+  List<String> get supplierList => _supplierList;
+  set setSupplierList(List<String> supplierList){
+    _supplierList = supplierList;
+  }
+
+
+
+  set setStockAvailableList(List<Stock> stockAvailableList) {
     _stockAvailableList = stockAvailableList;
     notifyListeners();
   }
@@ -55,6 +64,7 @@ class ApplicationState extends ChangeNotifier {
       'ekspektasi keuntungan': expectedIncome,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'created_at': DateTime.now().millisecondsSinceEpoch,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
 
@@ -117,6 +127,47 @@ class ApplicationState extends ChangeNotifier {
       'nama perusahaan': companyName,
       'nomor supplier': phoneNumber,
       'alamat perusahaan': companyAddress,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  Future<DocumentReference> addStockInFirestore({
+    required String? name,
+    required String? stockCode,
+    required String? supplierName,
+    required int? outflows,
+    required int? quantity,
+    required int? price,
+  }) {
+    return FirebaseFirestore.instance.collection('stock-in').add({
+      'nama barang': name,
+      'kode barang': stockCode,
+      'nama supplier': supplierName,
+      'kuantitas': quantity,
+      'harga satuan': price,
+      'dana keluar': outflows,
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+  Future<void> editStockInFirestore({
+    required String? name,
+    required String? stockCode,
+    required String? supplierName,
+    required int? outflows,
+    required int? quantity,
+    required int? price,
+    required String? documentID,
+  }) {
+    return FirebaseFirestore.instance.collection('stock-in').doc(documentID).update({
+      'nama barang': name,
+      'kode barang': stockCode,
+      'nama supplier': supplierName,
+      'kuantitas': quantity,
+      'harga satuan': price,
+      'dana keluar': outflows,
+      'uid': FirebaseAuth.instance.currentUser!.uid,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }

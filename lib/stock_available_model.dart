@@ -1,12 +1,38 @@
-class StockAvailable {
-  String? name, stockCode;
-  int? quantity, expectedIncome, price, created_at;
+import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 
-  StockAvailable(
+class Stock {
+  Supplier? supplier;
+  String? name, stockCode, supplierName;
+  int? quantity, expectedIncome, price, createdAt,updatedAt, outflows, incomingFunds;
+
+  Stock(
       {this.name,
       this.stockCode,
       this.quantity,
-      this.created_at,
+      this.createdAt,
+      this.expectedIncome,
+      this.price});
+  Stock.available(
+      {this.name,
+      this.stockCode,
+      this.quantity,
+      this.createdAt,
+      this.expectedIncome,
+      this.price});
+  Stock.masuk(
+      {this.name,
+      this.stockCode,
+      this.quantity,
+      this.outflows,
+      this.supplierName,
+      this.createdAt,
+      this.updatedAt,
+      this.price});
+  Stock.keluar(
+      {this.name,
+      this.stockCode,
+      this.quantity,
+      this.createdAt,
       this.expectedIncome,
       this.price});
 }

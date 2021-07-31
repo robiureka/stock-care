@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_in_listView.dart';
 
 class StockInTabView extends StatefulWidget {
   const StockInTabView({Key? key}) : super(key: key);
@@ -66,12 +67,12 @@ class _StockInTabViewState extends State<StockInTabView> {
                     ],
                   ),
                 ),
-                // Container(
-                //     width: MediaQuery.of(context).size.width,
-                //     height: MediaQuery.of(context).size.height - 220,
-                //     child: StockAvailableListView(
-                //       filter: filter,
-                //     )),
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 220,
+                    child: StockInListView(
+                      filter: filter,
+                    )),
               ]),
             ));
   }
