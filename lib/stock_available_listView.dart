@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_stock_available_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_available_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
 
 class StockAvailableListView extends StatefulWidget {
@@ -46,18 +47,19 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
           _stockAvailableList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
             return Stock.available(
-              expectedIncome: data['ekspektasi keuntungan'],
-              name: data['nama barang'],
-              price: data['harga satuan'],
-              quantity: data['kuantitas'],
-              stockCode: data['kode barang'],
-              createdAt: data['created_at'],
-            );
+                expectedIncome: data['ekspektasi keuntungan'],
+                name: data['nama barang'],
+                price: data['harga satuan'],
+                quantity: data['kuantitas'],
+                stockCode: data['kode barang'],
+                createdAt: data['created_at'],
+                updatedAt: data['updated_at']);
           }).where((element) {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
             final nameLower = element.name!.toLowerCase();
-            return stockCodeLower.contains(filterLower) || nameLower.contains(filterLower);
+            return stockCodeLower.contains(filterLower) ||
+                nameLower.contains(filterLower);
           }).toList();
           _stockAvailableList
               .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
@@ -78,6 +80,16 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                       child: InkWell(
                         onTap: () {
                           print('hello');
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => StockAvailableDetailScreen(
+                                    name: stock.name,
+                                    stockCode: stock.stockCode,
+                                    quantity: stock.quantity,
+                                    price: stock.price,
+                                    expectedIncome: stock.expectedIncome,
+                                    createdAt: stock.createdAt,
+                                    updatedAt: stock.updatedAt,
+                                  )));
                         },
                         child: Card(
                           child: ClipRRect(

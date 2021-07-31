@@ -17,6 +17,7 @@ class Stock {
       this.stockCode,
       this.quantity,
       this.createdAt,
+      this.updatedAt,
       this.expectedIncome,
       this.price});
   Stock.masuk(
