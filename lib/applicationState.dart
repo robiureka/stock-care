@@ -20,6 +20,11 @@ class ApplicationState extends ChangeNotifier {
   set setSupplierList(List<String> supplierList){
     _supplierList = supplierList;
   }
+  List<Stock> _stockToStockOutList = [];
+  List<Stock> get stockToStockOutList => _stockToStockOutList;
+  set setStockToStockOutList(List<Stock> stockToStockOutList){
+    _stockToStockOutList = stockToStockOutList;
+  }
 
 
 
@@ -167,6 +172,42 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'dana keluar': outflows,
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+  Future<DocumentReference> addStockOutFirestore({
+    required String? name,
+    required String? stockCode,
+    required int? incomingFunds,
+    required int? quantity,
+    required int? price,
+  }) {
+    return FirebaseFirestore.instance.collection('stock-out').add({
+      'nama barang': name,
+      'kode barang': stockCode,
+      'kuantitas': quantity,
+      'harga satuan': price,
+      'dana masuk': incomingFunds,
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+  Future<void> editStockOutFirestore({
+    required String? name,
+    required String? stockCode,
+    required int? incomingFunds,
+    required int? quantity,
+    required int? price,
+    required String? documentID,
+  }) {
+    return FirebaseFirestore.instance.collection('stock-out').doc(documentID).update({
+      'nama barang': name,
+      'kode barang': stockCode,
+      'kuantitas': quantity,
+      'harga satuan': price,
+      'dana masuk': incomingFunds,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });

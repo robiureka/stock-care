@@ -3,7 +3,13 @@ import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 class Stock {
   Supplier? supplier;
   String? name, stockCode, supplierName;
-  int? quantity, expectedIncome, price, createdAt,updatedAt, outflows, incomingFunds;
+  int? quantity,
+      expectedIncome,
+      price,
+      createdAt,
+      updatedAt,
+      outflows,
+      incomingFunds;
 
   Stock(
       {this.name,
@@ -34,7 +40,8 @@ class Stock {
       this.stockCode,
       this.quantity,
       this.createdAt,
-      this.expectedIncome,
+      this.updatedAt,
+      this.incomingFunds,
       this.price});
 }
 

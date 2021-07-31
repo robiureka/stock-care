@@ -4,6 +4,7 @@ import 'package:test_aplikasi_tugas_akhir/auth.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_in_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/input_new_stock_out_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/login_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_tabView.dart';
@@ -100,12 +101,19 @@ class _HomeScreenState extends State<HomeScreen>
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => InputNewStockInScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => InputNewStockInScreen()),
                   );
                 },
               )
             : FloatingActionButton.extended(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InputNewStockOutScreen()),
+                  );
+                },
                 label: Text('Stok Keluar'),
                 icon: Icon(Icons.add),
               );

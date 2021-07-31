@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,29 +5,26 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/edit_stock_available_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
 
-class StockAvailableListView extends StatefulWidget {
+class StockOutListView extends StatefulWidget {
   final String filter;
-  const StockAvailableListView({Key? key, required this.filter})
-      : super(key: key);
+  const StockOutListView({ Key? key,required this.filter }) : super(key: key);
 
   @override
-  _StockAvailableListViewState createState() => _StockAvailableListViewState();
+  _StockOutListViewState createState() => _StockOutListViewState();
 }
 
-class _StockAvailableListViewState extends State<StockAvailableListView> {
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  List<Stock> _stockAvailableList = [];
+class _StockOutListViewState extends State<StockOutListView> {
+ FirebaseFirestore db = FirebaseFirestore.instance;
+  List<Stock> _stockOutList = [];
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
       builder: (context, appState, _) => StreamBuilder<QuerySnapshot>(
         stream: db
-            .collection('available-stocks')
+            .collection('stock-out')
             .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .orderBy('created_at', descending: true)
             .snapshots(),
@@ -44,10 +39,10 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
             return Center(child: CircularProgressIndicator());
           }
 
-          _stockAvailableList = snapshot.data!.docs.map((e) {
+          _stockOutList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
-            return Stock.available(
-                expectedIncome: data['ekspektasi keuntungan'],
+            return Stock.keluar(
+                incomingFunds: data['dana masuk'],
                 name: data['nama barang'],
                 price: data['harga satuan'],
                 quantity: data['kuantitas'],
@@ -61,37 +56,36 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
             return stockCodeLower.contains(filterLower) ||
                 nameLower.contains(filterLower);
           }).toList();
-          appState.setStockToStockOutList = _stockAvailableList;
-          _stockAvailableList
+          _stockOutList
               .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          print(_stockAvailableList);
-          return (_stockAvailableList.isEmpty)
+          print(_stockOutList);
+          return (_stockOutList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
                 )
               : ListView.builder(
-                  itemCount: _stockAvailableList.length,
+                  itemCount: _stockOutList.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Stock stock = _stockAvailableList[index];
+                    Stock stock = _stockOutList[index];
                     DocumentSnapshot document = snapshot.data!.docs[index];
                     return Container(
                       padding: EdgeInsets.all(5.0),
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
                       child: InkWell(
-                        onTap: () {
-                          print('hello');
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => StockAvailableDetailScreen(
-                                    name: stock.name,
-                                    stockCode: stock.stockCode,
-                                    quantity: stock.quantity,
-                                    price: stock.price,
-                                    expectedIncome: stock.expectedIncome,
-                                    createdAt: stock.createdAt,
-                                    updatedAt: stock.updatedAt,
-                                  )));
-                        },
+                        // onTap: () {
+                        //   print('hello');
+                        //   Navigator.of(context).push(MaterialPageRoute(
+                        //       builder: (context) => StockAvailableDetailScreen(
+                        //             name: stock.name,
+                        //             stockCode: stock.stockCode,
+                        //             quantity: stock.quantity,
+                        //             price: stock.price,
+                        //             incomingFunds: stock.incomingFunds,
+                        //             createdAt: stock.createdAt,
+                        //             updatedAt: stock.updatedAt,
+                        //           )));
+                        // },
                         child: Card(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15.0),
@@ -104,20 +98,20 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                   icon: Icons.edit,
                                   onTap: () {
                                     print('edit clicked');
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditStockAvailableScreen(
-                                          name: stock.name!,
-                                          stockCode: stock.stockCode!,
-                                          expectedIncome: stock.expectedIncome!,
-                                          price: stock.price!,
-                                          quantity: stock.quantity!,
-                                          documentID: document.reference.id,
-                                        ),
-                                      ),
-                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) =>
+                                    //         EditStockAvailableScreen(
+                                    //       name: stock.name!,
+                                    //       stockCode: stock.stockCode!,
+                                    //       incomingFunds: stock.incomingFunds!,
+                                    //       price: stock.price!,
+                                    //       quantity: stock.quantity!,
+                                    //       documentID: document.reference.id,
+                                    //     ),
+                                    //   ),
+                                    // );
                                   },
                                 ),
                                 IconSlideAction(
@@ -126,7 +120,7 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                   icon: Icons.delete,
                                   onTap: () async {
                                     await document.reference.delete();
-                                    _stockAvailableList
+                                    _stockOutList
                                         .remove(document.reference.id);
                                   },
                                 ),
@@ -162,14 +156,14 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                       children: <Widget>[
                                         Flexible(
                                           flex: 3,
-                                          child: Text('Ekspektasi Keuntungan'),
+                                          child: Text('Dana Masuk'),
                                         ),
                                         Flexible(
                                           flex: 3,
                                           child: Text(NumberFormat.currency(
                                                   locale: 'in ',
                                                   decimalDigits: 0)
-                                              .format(stock.expectedIncome)
+                                              .format(stock.incomingFunds)
                                               .toString()),
                                         ),
                                       ],
