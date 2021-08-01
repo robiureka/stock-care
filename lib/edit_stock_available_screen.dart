@@ -201,23 +201,6 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
                               print(e.toString());
                             }
                           }
-                          // _expectedIncome = _quantity! * _price!;
-                          // if (_inputNewStockGlobalKey.currentState!
-                          //     .validate()) {
-                          //   _inputNewStockGlobalKey.currentState!.save();
-                          //   try {
-                          //     await appState.addStockAvailableFirestore(
-                          //       expectedIncome: _expectedIncome,
-                          //       quantity: _quantity,
-                          //       name: _name,
-                          //       price: _price,
-                          //       stockCode: _stockCode,
-                          //     );
-                          //     Navigator.pop(context);
-                          //   } catch (e) {
-                          //     print(e.toString());
-                          //   }
-                          // }
                         },
                         child: Text(
                           'CONFIRM',

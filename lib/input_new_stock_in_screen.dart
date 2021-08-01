@@ -38,7 +38,7 @@ class _InputNewStockInScreenState extends State<InputNewStockInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Stok-In Baru'),
+        title: Text('Tambah Stok Masuk Baru'),
       ),
       body: SingleChildScrollView(
         child: Container(

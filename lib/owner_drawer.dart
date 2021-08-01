@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
+import 'package:test_aplikasi_tugas_akhir/profile_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_screen.dart';
 
 class OwnerDrawer extends StatelessWidget {
@@ -33,13 +36,11 @@ class OwnerDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-
             leading: Icon(Icons.dashboard),
             title: Text('My Stock'),
             onTap: () {
-              print('My Stock clicked');
+              Navigator.of(context).pop();
             },
-            selected: true,
           ),
           SizedBox(height: 10.0),
           ListTile(
@@ -49,15 +50,15 @@ class OwnerDrawer extends StatelessWidget {
               print('Supplier clicked');
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SupplierScreen()));
-                
             },
           ),
           SizedBox(height: 10.0),
           ListTile(
             leading: Icon(Icons.account_circle),
             title: Text('My Profile'),
-            onTap: () {
-              print('Profile clicked');
+            onTap: () async {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()));
             },
           )
         ],
