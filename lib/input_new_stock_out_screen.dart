@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -13,14 +14,14 @@ class InputNewStockOutScreen extends StatefulWidget {
 }
 
 class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
-  Stock? _selectedStock;
   TextEditingController _nameController = TextEditingController();
   final GlobalKey<FormState> _inputNewStockOutKey = GlobalKey<FormState>();
+  Stock? _selectedStock;
   String? _name, _stockCode;
   int? _incomingFunds, _quantity = 0, _price = 0;
   @override
   void initState() {
-    _nameController.addListener(() { 
+    _nameController.addListener(() {
       setState(() {
         _name = _nameController.text;
       });
@@ -43,7 +44,7 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Stok-Out Baru'),
+        title: Text('Tambah Stok Keluar Baru'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -78,7 +79,6 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
                   builder: (context, appState, _) => Container(
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                     child: DropdownButton<Stock>(
-
                       hint: Text('Pilih Kode Stok'),
                       isExpanded: true,
                       value: _selectedStock,
@@ -199,9 +199,10 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
       ),
     );
   }
-   @override
+
+  @override
   void dispose() {
-    _nameController.removeListener(() { });
+    _nameController.removeListener(() {});
     _nameController.dispose();
     super.dispose();
   }

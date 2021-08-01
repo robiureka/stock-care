@@ -7,9 +7,10 @@ import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 
 class ApplicationState extends ChangeNotifier {
-  String? _email = 'unknown', _username = "no name";
+  String? _email = 'unknown', _username = "no name", _stockAvailableDocID;
   StreamSubscription<QuerySnapshot>? _stockAvailableSubscription;
   String _filter = '';
+  String get stockAvailableDocID => _stockAvailableDocID!;
   List<Stock> _stockAvailableList = [];
   List<Stock> get stockAvailableList {
     return _stockAvailableList;
@@ -228,6 +229,22 @@ class ApplicationState extends ChangeNotifier {
       'dana masuk': incomingFunds,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  Future<void> updateProfile({
+    required String? username,
+    required String? phoneNumber,
+    required String? address,
+  }) async {
+    await FirebaseAuth.instance.currentUser!.updateDisplayName(username);
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'username': username,
+      'nomor telepon': phoneNumber,
+      'alamat': address,
     });
   }
 }
