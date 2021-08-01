@@ -5,14 +5,26 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
 
-class InputNewStockOutScreen extends StatefulWidget {
-  const InputNewStockOutScreen({Key? key}) : super(key: key);
+class EditStockOutScreen extends StatefulWidget {
+  final Stock stock;
+  final String name, documentID;
+  final int quantity, incomingFunds, price;
+  const EditStockOutScreen(
+      {Key? key,
+      required this.documentID,
+      required this.name,
+      required this.incomingFunds,
+      required this.price,
+      required this.stock,
+      required this.quantity})
+      : super(key: key);
 
   @override
-  _InputNewStockOutScreenState createState() => _InputNewStockOutScreenState();
+  _EditStockOutScreenState createState() => _EditStockOutScreenState();
 }
 
-class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
+class _EditStockOutScreenState extends State<EditStockOutScreen> {
+  // final provider = Provider.of<ApplicationState>(context);
   Stock? _selectedStock;
   TextEditingController _nameController = TextEditingController();
   final GlobalKey<FormState> _inputNewStockOutKey = GlobalKey<FormState>();
@@ -20,15 +32,21 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
   int? _incomingFunds, _quantity = 0, _price = 0;
   @override
   void initState() {
-    _nameController.addListener(() { 
+    super.initState();
+    // final provider = Provider.of<ApplicationState>(context);
+    _nameController.text = widget.name;
+    _stockCode = widget.stock.stockCode;
+    _price = widget.price;
+    _name = _nameController.text;
+    _quantity = widget.quantity;
+    _nameController.addListener(() {
       setState(() {
         _name = _nameController.text;
       });
     });
-    super.initState();
   }
 
-  List<DropdownMenuItem<Stock>> generateStockCodeItem(List<Stock> stocks) {
+  List<DropdownMenuItem<Stock>> generateStockItem(List<Stock> stocks) {
     List<DropdownMenuItem<Stock>> items = [];
     for (var item in stocks) {
       items.add(DropdownMenuItem(
@@ -43,7 +61,7 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Stok-Out Baru'),
+        title: Text('Edit Stok Keluar'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -78,12 +96,10 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
                   builder: (context, appState, _) => Container(
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                     child: DropdownButton<Stock>(
-
                       hint: Text('Pilih Kode Stok'),
                       isExpanded: true,
                       value: _selectedStock,
-                      items:
-                          generateStockCodeItem(appState.stockToStockOutList),
+                      items: generateStockItem(appState.stockToStockOutList),
                       onChanged: (item) {
                         setState(() {
                           _selectedStock = item;
@@ -98,6 +114,7 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
                   height: 15.0,
                 ),
                 TextFormField(
+                  initialValue: _quantity.toString(),
                   keyboardType: TextInputType.number,
                   onChanged: (String? value) {
                     setState(() {
@@ -122,6 +139,7 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
                   height: 15.0,
                 ),
                 TextFormField(
+                  initialValue: _price.toString(),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   onChanged: (String? value) {
@@ -172,12 +190,13 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
                           if (_inputNewStockOutKey.currentState!.validate()) {
                             _inputNewStockOutKey.currentState!.save();
                             try {
-                              await appState.addStockOutFirestore(
+                              await appState.editStockOutFirestore(
                                   name: _name,
                                   stockCode: _stockCode,
                                   incomingFunds: _incomingFunds,
                                   quantity: _quantity,
-                                  price: _price);
+                                  price: _price,
+                                  documentID: widget.documentID);
                               Navigator.pop(context);
                             } catch (e) {
                               print(e.toString());
@@ -199,9 +218,10 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
       ),
     );
   }
-   @override
+
+  @override
   void dispose() {
-    _nameController.removeListener(() { });
+    _nameController.removeListener(() {});
     _nameController.dispose();
     super.dispose();
   }

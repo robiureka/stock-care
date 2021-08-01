@@ -109,6 +109,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                   ),
                   onPressed: () async {
                     dynamic userOrError;
+
                     AuthService _auth = AuthService();
                     if (_loginFormKey.currentState!.validate()) {
                       _loginFormKey.currentState!.save();
@@ -121,7 +122,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                         print(isOwner);
                         print(userOrError);
                         appState.setusername = userOrError.displayName;
-                        // appState.getAllUserStocks(userOrError.uid);
+                        await appState.getSupplier(userOrError.uid);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

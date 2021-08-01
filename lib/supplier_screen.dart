@@ -70,7 +70,7 @@ class SupplierScreen extends StatelessWidget {
                  _temporarySupplierList = _supplierList.map((e) {
                   return e.personName!;
                 }).toList();
-                appState.setSupplierList = _temporarySupplierList;
+                // appState.setSupplierList = _temporarySupplierList;
                 return (_supplierList.isEmpty)
                     ? Center(child: Text('Kosong'))
                     : ListView.builder(

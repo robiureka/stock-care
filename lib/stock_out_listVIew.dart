@@ -5,7 +5,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
+import 'package:test_aplikasi_tugas_akhir/edit_stock_out_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_out_detail_screen.dart';
 
 class StockOutListView extends StatefulWidget {
   final String filter;
@@ -73,19 +75,19 @@ class _StockOutListViewState extends State<StockOutListView> {
                       padding: EdgeInsets.all(5.0),
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
                       child: InkWell(
-                        // onTap: () {
-                        //   print('hello');
-                        //   Navigator.of(context).push(MaterialPageRoute(
-                        //       builder: (context) => StockAvailableDetailScreen(
-                        //             name: stock.name,
-                        //             stockCode: stock.stockCode,
-                        //             quantity: stock.quantity,
-                        //             price: stock.price,
-                        //             incomingFunds: stock.incomingFunds,
-                        //             createdAt: stock.createdAt,
-                        //             updatedAt: stock.updatedAt,
-                        //           )));
-                        // },
+                        onTap: () {
+                          print('hello');
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => StockOutDetailScreen(
+                                    name: stock.name,
+                                    stockCode: stock.stockCode,
+                                    quantity: stock.quantity,
+                                    price: stock.price,
+                                    incomingFunds: stock.incomingFunds,
+                                    createdAt: stock.createdAt,
+                                    updatedAt: stock.updatedAt,
+                                  )));
+                        },
                         child: Card(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15.0),
@@ -98,20 +100,20 @@ class _StockOutListViewState extends State<StockOutListView> {
                                   icon: Icons.edit,
                                   onTap: () {
                                     print('edit clicked');
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         EditStockAvailableScreen(
-                                    //       name: stock.name!,
-                                    //       stockCode: stock.stockCode!,
-                                    //       incomingFunds: stock.incomingFunds!,
-                                    //       price: stock.price!,
-                                    //       quantity: stock.quantity!,
-                                    //       documentID: document.reference.id,
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditStockOutScreen(
+                                          name: stock.name!,
+                                          stock: stock,
+                                          incomingFunds: stock.incomingFunds!,
+                                          price: stock.price!,
+                                          quantity: stock.quantity!,
+                                          documentID: document.reference.id,
+                                        ),
+                                      ),
+                                    );
                                   },
                                 ),
                                 IconSlideAction(

@@ -17,16 +17,25 @@ class ApplicationState extends ChangeNotifier {
 
   List<String> _supplierList = [];
   List<String> get supplierList => _supplierList;
-  set setSupplierList(List<String> supplierList){
+  set setSupplierList(List<String> supplierList) {
     _supplierList = supplierList;
   }
+
   List<Stock> _stockToStockOutList = [];
   List<Stock> get stockToStockOutList => _stockToStockOutList;
-  set setStockToStockOutList(List<Stock> stockToStockOutList){
+  set setStockToStockOutList(List<Stock> stockToStockOutList) {
     _stockToStockOutList = stockToStockOutList;
   }
 
-
+  Future<void> getSupplier(String uid) async {
+    QuerySnapshot docsnapshot = await FirebaseFirestore.instance
+        .collection('users/$uid/supplier-list')
+        .get();
+    docsnapshot.docs.forEach((element) {
+      Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+      _supplierList.add(data['nama supplier']);
+    });
+  }
 
   set setStockAvailableList(List<Stock> stockAvailableList) {
     _stockAvailableList = stockAvailableList;
@@ -156,6 +165,7 @@ class ApplicationState extends ChangeNotifier {
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
+
   Future<void> editStockInFirestore({
     required String? name,
     required String? stockCode,
@@ -165,7 +175,10 @@ class ApplicationState extends ChangeNotifier {
     required int? price,
     required String? documentID,
   }) {
-    return FirebaseFirestore.instance.collection('stock-in').doc(documentID).update({
+    return FirebaseFirestore.instance
+        .collection('stock-in')
+        .doc(documentID)
+        .update({
       'nama barang': name,
       'kode barang': stockCode,
       'nama supplier': supplierName,
@@ -176,6 +189,7 @@ class ApplicationState extends ChangeNotifier {
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
+
   Future<DocumentReference> addStockOutFirestore({
     required String? name,
     required String? stockCode,
@@ -194,6 +208,7 @@ class ApplicationState extends ChangeNotifier {
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
+
   Future<void> editStockOutFirestore({
     required String? name,
     required String? stockCode,
@@ -202,7 +217,10 @@ class ApplicationState extends ChangeNotifier {
     required int? price,
     required String? documentID,
   }) {
-    return FirebaseFirestore.instance.collection('stock-out').doc(documentID).update({
+    return FirebaseFirestore.instance
+        .collection('stock-out')
+        .doc(documentID)
+        .update({
       'nama barang': name,
       'kode barang': stockCode,
       'kuantitas': quantity,
