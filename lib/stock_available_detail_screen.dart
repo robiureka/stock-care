@@ -69,7 +69,7 @@ class StockAvailableDetailScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Dana Keluar:'),
+                    Text('Ekspektasi Keuntungan:'),
                     Text(NumberFormat.currency(locale: 'in ', decimalDigits: 0)
                         .format(expectedIncome)
                         .toString()),

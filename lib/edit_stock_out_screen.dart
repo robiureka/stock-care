@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 
 class EditStockOutScreen extends StatefulWidget {
   final Stock stock;

@@ -1,14 +1,10 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_listView.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
-import "package:intl/intl.dart";
+
 
 class StockAvailableTabView extends StatefulWidget {
   const StockAvailableTabView({Key? key}) : super(key: key);

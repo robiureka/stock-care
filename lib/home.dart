@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:test_aplikasi_tugas_akhir/auth.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_in_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_out_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/login_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
@@ -57,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen>
                 setState(() {
                   selectedIndex = index;
                 });
-                print(selectedIndex);
               },
               tabs: [
                 Tab(

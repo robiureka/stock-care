@@ -56,7 +56,7 @@ class _EditStockInScreenState extends State<EditStockInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Stok-In Baru'),
+        title: Text('Edit Stok Masuk'),
       ),
       body: SingleChildScrollView(
         child: Container(

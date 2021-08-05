@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 
 class InputNewStockOutScreen extends StatefulWidget {
   const InputNewStockOutScreen({Key? key}) : super(key: key);

@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/auth.dart';
 import 'package:test_aplikasi_tugas_akhir/database.dart';
 import 'package:test_aplikasi_tugas_akhir/home.dart';
-import 'package:test_aplikasi_tugas_akhir/home_supplier_screen.dart';
 
 class UsernamePasswordField extends StatefulWidget {
   const UsernamePasswordField({Key? key}) : super(key: key);
@@ -53,9 +50,9 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
                 final regExp = RegExp(pattern);
                 if (value == null || value.isEmpty) {
-                  return 'Please Enter Your Email';
+                  return 'Mohon Masukkan Email Anda';
                 } else if (!regExp.hasMatch(value)) {
-                  return 'Please Enter a Valid Email';
+                  return 'Mohon Masukkan Email Yang Valid';
                 }
                 return null;
               },
@@ -83,7 +80,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
               },
               validator: (String? value) {
                 if (value == '' || value!.isEmpty) {
-                  return 'Please enter your password';
+                  return 'Mohon Masukkan Password Anda';
                 }
               },
               decoration: InputDecoration(
@@ -126,9 +123,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => (isOwner == true)
-                                    ? HomeScreen()
-                                    : SupplierHomeScreen()));
+                                builder: (context) => HomeScreen()));
                         _loginFormKey.currentState!.reset();
                       } catch (e) {
                         return showDialog(
