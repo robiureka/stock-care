@@ -59,14 +59,14 @@ class _HomeScreenState extends State<HomeScreen>
               },
               tabs: [
                 Tab(
-                  child: Text('Stok Masuk', style: TextStyle(fontSize: 16.0)),
+                  child: Text('Stok Masuk', style: TextStyle(fontSize: 13.0)),
                 ),
                 Tab(
                   child:
-                      Text('Stok Tersedia', style: TextStyle(fontSize: 16.0)),
+                      Text('Stok Tersedia', style: TextStyle(fontSize: 13.0)),
                 ),
                 Tab(
-                  child: Text('Stok Keluar', style: TextStyle(fontSize: 16.0)),
+                  child: Text('Stok Keluar', style: TextStyle(fontSize: 13.0)),
                 ),
               ]),
         ),
