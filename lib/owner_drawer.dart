@@ -45,7 +45,6 @@ class OwnerDrawer extends StatelessWidget {
             leading: Icon(Icons.people),
             title: Text('Supplier'),
             onTap: () {
-              print('Supplier clicked');
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SupplierScreen()));
             },

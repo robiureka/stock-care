@@ -31,7 +31,6 @@ class _StockInListViewState extends State<StockInListView> {
             .orderBy('created_at', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          print(snapshot);
           if (snapshot.hasError) {
             return Center(child: Text('Something went wrong'));
           }
