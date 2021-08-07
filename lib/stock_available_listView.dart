@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_available_detail_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 
 class StockAvailableListView extends StatefulWidget {
   final String filter;
@@ -34,9 +32,7 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
             .orderBy('created_at', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          print(snapshot);
           if (snapshot.hasError) {
-            print(snapshot.error.toString());
             return Center(child: Text('Something went wrong'));
           }
 
@@ -64,7 +60,6 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
           appState.setStockToStockOutList = _stockAvailableList;
           _stockAvailableList
               .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          print(_stockAvailableList);
           return (_stockAvailableList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
@@ -80,7 +75,6 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
                       child: InkWell(
                         onTap: () {
-                          print('hello');
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => StockAvailableDetailScreen(
                                     name: stock.name,
@@ -103,7 +97,6 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                                   caption: 'Edit',
                                   icon: Icons.edit,
                                   onTap: () {
-                                    print('edit clicked');
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -5,8 +5,8 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   ApplicationState appState = ApplicationState();
 
-
-  Future<dynamic> createUser(String email, String password, String displayName) async {
+  Future<dynamic> createUser(
+      String email, String password, String displayName) async {
     String error = '';
     try {
       UserCredential _userCredential = await _auth
@@ -16,7 +16,7 @@ class AuthService {
       return user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        error = 'The account already exists for that email.';
+        error = 'email yang dimasukkan sudah terdaftar di akun lain';
         return error;
       }
     } catch (e) {
@@ -34,10 +34,10 @@ class AuthService {
       return user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        error = 'No user found for that email';
+        error = 'Email tidak terdaftar';
         return error;
       } else if (e.code == 'wrong-password') {
-        error = 'Wrong password provided for that user.';
+        error = 'Password yang anda masukkan salah untuk pengguna tersebut.';
         return error;
       }
     } catch (e) {

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_stock_out_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_out_detail_screen.dart';
 
 class StockOutListView extends StatefulWidget {
@@ -31,9 +31,7 @@ class _StockOutListViewState extends State<StockOutListView> {
             .orderBy('created_at', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          print(snapshot);
           if (snapshot.hasError) {
-            print(snapshot.error.toString());
             return Center(child: Text('Something went wrong'));
           }
 
@@ -60,7 +58,6 @@ class _StockOutListViewState extends State<StockOutListView> {
           }).toList();
           _stockOutList
               .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          print(_stockOutList);
           return (_stockOutList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
@@ -76,7 +73,6 @@ class _StockOutListViewState extends State<StockOutListView> {
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
                       child: InkWell(
                         onTap: () {
-                          print('hello');
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => StockOutDetailScreen(
                                     name: stock.name,
@@ -99,7 +95,6 @@ class _StockOutListViewState extends State<StockOutListView> {
                                   caption: 'Edit',
                                   icon: Icons.edit,
                                   onTap: () {
-                                    print('edit clicked');
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

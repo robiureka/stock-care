@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 
 class InputNewStockOutScreen extends StatefulWidget {
   const InputNewStockOutScreen({Key? key}) : super(key: key);
@@ -15,6 +15,7 @@ class InputNewStockOutScreen extends StatefulWidget {
 
 class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
   final GlobalKey<FormState> _inputNewStockOutKey = GlobalKey<FormState>();
   Stock? _selectedStock;
   String? _name, _stockCode;
@@ -24,6 +25,11 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
     _nameController.addListener(() {
       setState(() {
         _name = _nameController.text;
+      });
+    });
+    _priceController.addListener(() {
+      setState(() {
+        _price = int.parse(_priceController.text);
       });
     });
     super.initState();
@@ -89,6 +95,7 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
                           _selectedStock = item;
                           _stockCode = item!.stockCode;
                           _nameController.text = item.name!;
+                          _priceController.text = item.price.toString();
                         });
                       },
                     ),
@@ -122,13 +129,9 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
                   height: 15.0,
                 ),
                 TextFormField(
+                  controller: _priceController,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
-                  onChanged: (String? value) {
-                    setState(() {
-                      _price = int.parse(value!);
-                    });
-                  },
                   decoration: InputDecoration(
                     hintText: 'Harga Satuan',
                     contentPadding:
@@ -203,7 +206,10 @@ class _InputNewStockOutScreenState extends State<InputNewStockOutScreen> {
   @override
   void dispose() {
     _nameController.removeListener(() {});
+    _priceController.removeListener(() { });
+
     _nameController.dispose();
+    _priceController.dispose();
     super.dispose();
   }
 }

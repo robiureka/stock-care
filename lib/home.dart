@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/auth.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_in_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/input_new_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_stock_out_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/login_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
@@ -43,32 +44,34 @@ class _HomeScreenState extends State<HomeScreen>
           title: Text('My Stock'),
           centerTitle: true,
           actions: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  await _auth.signOut().then((result) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
-                  });
-                },
-                icon: Icon(Icons.logout))
+            Consumer<ApplicationState>(
+              builder: (context, appState, _) => IconButton(
+                  onPressed: () async {
+                    await _auth.signOut().then((result) {
+                      appState.setSupplierList = [];
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => LoginScreen()));
+                    });
+                  },
+                  icon: Icon(Icons.logout)),
+            )
           ],
           bottom: TabBar(
               onTap: (index) {
                 setState(() {
                   selectedIndex = index;
                 });
-                print(selectedIndex);
               },
               tabs: [
                 Tab(
-                  child: Text('Stok Masuk', style: TextStyle(fontSize: 16.0)),
+                  child: Text('Stok Masuk', style: TextStyle(fontSize: 13.0)),
                 ),
                 Tab(
                   child:
-                      Text('Stok Tersedia', style: TextStyle(fontSize: 16.0)),
+                      Text('Stok Tersedia', style: TextStyle(fontSize: 13.0)),
                 ),
                 Tab(
-                  child: Text('Stok Keluar', style: TextStyle(fontSize: 16.0)),
+                  child: Text('Stok Keluar', style: TextStyle(fontSize: 13.0)),
                 ),
               ]),
         ),

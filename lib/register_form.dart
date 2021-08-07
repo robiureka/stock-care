@@ -45,9 +45,9 @@ class _SignUpFormState extends State<SignUpForm> {
                   r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
               final regExp = RegExp(pattern);
               if (value == null || value.isEmpty) {
-                return 'Please Enter Your Email';
+                return 'Mohon Masukkan Email Anda';
               } else if (!regExp.hasMatch(value)) {
-                return 'Please Enter a Valid Email';
+                return 'Mohon Masukkan Email Yang Valid';
               }
               return null;
             },
@@ -70,7 +70,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
-                return 'Please Enter Your Username';
+                return 'Masukkan Username Anda';
               }
               return null;
             },
@@ -93,9 +93,9 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
-                return 'Please Enter Your Password';
+                return 'Masukkan Password Anda';
               } else if (value.length < 12) {
-                return 'Password must be at least 12 characters';
+                return 'Password minimal harus memiliki 12 karakter';
               }
               return null;
             },
@@ -118,9 +118,9 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
-                return 'Please Enter to confirm the Password';
+                return 'Mohon Masukkan Ulang Password Anda';
               } else if (_confirmPassword != _password) {
-                return 'Please Enter the Password correctly';
+                return 'Password Yang Anda Masukkan Salah';
               }
               return null;
             },
@@ -143,9 +143,9 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
-                return 'Please Enter Your Nomor Telepon';
+                return 'Masukkan Nomor Telepon Anda';
               } else if (value[0] != '+'){
-                return 'Please Start With +62';
+                return 'Mulai Nomor Telepon Dengan +62';
               }
               return null;
             },
@@ -168,7 +168,7 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
-                return 'Please Enter Your Alamat';
+                return 'Masukkan Alamat Anda';
               }
               return null;
             },
@@ -206,7 +206,7 @@ class _SignUpFormState extends State<SignUpForm> {
                       print(_password);
                       print(result);
                       if (result !=
-                          'The account already exists for that email.') {
+                          'email yang dimasukkan sudah terdaftar di akun lain') {
                         try {
                           await firestore.collection('users').doc(result.uid).set({
                             'username': username,

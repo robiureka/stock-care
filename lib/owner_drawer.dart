@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
@@ -47,7 +45,6 @@ class OwnerDrawer extends StatelessWidget {
             leading: Icon(Icons.people),
             title: Text('Supplier'),
             onTap: () {
-              print('Supplier clicked');
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SupplierScreen()));
             },

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/profile_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String username, phoneNumber, address;
@@ -27,6 +26,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _address = widget.address;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: Text('Perbarui Profil'),
       ),
       body: SingleChildScrollView(
-        child: Container(
+              child: Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 25.0),
                 child: Form(
@@ -156,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
-      ),
+            ),
     );
   }
 

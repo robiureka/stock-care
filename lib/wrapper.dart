@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_aplikasi_tugas_akhir/database.dart';
 import 'package:test_aplikasi_tugas_akhir/home.dart';
-import 'package:test_aplikasi_tugas_akhir/home_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/login_screen.dart';
 
 User? user = FirebaseAuth.instance.currentUser;

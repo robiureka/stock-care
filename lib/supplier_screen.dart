@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/input_new_supplier_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/owner_drawer.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -135,7 +134,7 @@ class SupplierScreen extends StatelessWidget {
                                       launchWhatsapp(
                                           number: supplier.phoneNumber!,
                                           message:
-                                              'Saya ingin membuat order barang:');
+                                              'Saya ingin membuat order barang: \n');
                                     },
                                     onTap: () {
                                       Navigator.push(

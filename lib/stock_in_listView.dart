@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_stock_in_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_model.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_in_detail_screen.dart';
 
 class StockInListView extends StatefulWidget {
@@ -31,9 +31,7 @@ class _StockInListViewState extends State<StockInListView> {
             .orderBy('created_at', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          print(snapshot);
           if (snapshot.hasError) {
-            print(snapshot.error.toString());
             return Center(child: Text('Something went wrong'));
           }
 
@@ -61,7 +59,6 @@ class _StockInListViewState extends State<StockInListView> {
                 nameLower.contains(filterLower);
           }).toList();
           _stockInList.sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          print(_stockInList);
           return (_stockInList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
@@ -101,7 +98,6 @@ class _StockInListViewState extends State<StockInListView> {
                                   caption: 'Edit',
                                   icon: Icons.edit,
                                   onTap: () {
-                                    print('edit clicked');
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
