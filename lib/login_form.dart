@@ -110,14 +110,14 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                     AuthService _auth = AuthService();
                     if (_loginFormKey.currentState!.validate()) {
                       _loginFormKey.currentState!.save();
-                      print(_email);
-                      print(_password);
+                      // print(_email);
+                      // print(_password);
                       try {
                         userOrError =
                             await _auth.signInUser(_email!, _password!);
                         isOwner = await getUserByRole(userOrError.uid);
-                        print(isOwner);
-                        print(userOrError);
+                        // print(isOwner);
+                        // print(userOrError);
                         appState.setusername = userOrError.displayName;
                         await appState.getSupplier(userOrError.uid);
                         Navigator.pushReplacement(
