@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
-import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
+import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart' as pia;
 import 'package:test_aplikasi_tugas_akhir/stock_in_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 
@@ -90,12 +90,12 @@ class _StockInTabViewState extends State<StockInTabView> {
                             description:
                                 'Stok masuk telah diterima oleh ${FirebaseAuth.instance.currentUser!.displayName} dari supplier yang tertera pada tabel',
                             number:
-                                '${DateTime.now().year}-${Random().nextInt(9999)}',
+                                '${DateTime.now().year}-${pia.randomNumber}',
                           ),
                           items: appState.stockInToInvoiceItem,
                         );
 
-                        final pdfFile = await PdfInvoiceApi.generateStockInInvoice(invoice);
+                        final pdfFile = await pia.PdfInvoiceApi.generateStockInInvoice(invoice);
                         PdfApi.openFile(pdfFile);
                       },
                       child: Text('Buat PDF')),

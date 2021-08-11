@@ -56,15 +56,16 @@ class _AdminStockInListViewState extends State<AdminStockInListView> {
                 createdAt: data['created_at'],
                 updatedAt: data['updated_at']);
           }).where((element) {
-            final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
+            final stockCodeLower = element.stockCode!.toLowerCase();
             final nameLower = element.name!.toLowerCase();
+            final supplierNameLower = element.supplierName!.toLowerCase();
             final usernameLower = element.username!.toLowerCase();
             final uidLower = element.uid!.toLowerCase();
             return stockCodeLower.contains(filterLower) ||
                 nameLower.contains(filterLower) ||
                 uidLower.contains(filterLower) ||
-                usernameLower.contains(filterLower);
+                usernameLower.contains(filterLower) || supplierNameLower.contains(filterLower);
           }).toList();
           _stockInList.sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
           return (_stockInList.isEmpty)

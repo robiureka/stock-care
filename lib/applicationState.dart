@@ -81,7 +81,7 @@ class ApplicationState extends ChangeNotifier {
     required String? stockCode,
     required int? expectedIncome,
     required int? quantity,
-    String? username,
+    required String? username,
     required int? price,
   }) {
     return FirebaseFirestore.instance.collection('available-stocks').add({
@@ -103,6 +103,7 @@ class ApplicationState extends ChangeNotifier {
     required int? expectedIncome,
     required int? quantity,
     required int? price,
+    required String? username,
     required String? documentID,
   }) {
     return FirebaseFirestore.instance
@@ -114,6 +115,7 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'ekspektasi keuntungan': expectedIncome,
+      'username': username,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -153,6 +155,7 @@ class ApplicationState extends ChangeNotifier {
       'nama perusahaan': companyName,
       'nomor supplier': phoneNumber,
       'alamat perusahaan': companyAddress,
+      'username': FirebaseAuth.instance.currentUser!.displayName,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -198,7 +201,7 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'dana keluar': outflows,
-      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'username': FirebaseAuth.instance.currentUser!.displayName,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -240,7 +243,7 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'dana masuk': incomingFunds,
-      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'username': FirebaseAuth.instance.currentUser!.displayName,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }

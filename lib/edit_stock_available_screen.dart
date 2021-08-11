@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -195,7 +196,9 @@ class _EditStockAvailableScreenState extends State<EditStockAvailableScreen> {
                                   expectedIncome: _expectedIncome,
                                   quantity: _quantity,
                                   price: _price,
-                                  documentID: widget.documentID);
+                                  documentID: widget.documentID,
+                                  username: FirebaseAuth
+                                      .instance.currentUser!.displayName);
                               Navigator.of(context).pop();
                             } catch (e) {
                               print(e.toString());

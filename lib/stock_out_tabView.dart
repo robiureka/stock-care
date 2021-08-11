@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
-import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
+import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart' as pia;
 import 'package:test_aplikasi_tugas_akhir/stock_out_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 
@@ -89,12 +89,12 @@ class _StockOutTabViewState extends State<StockOutTabView> {
                             description:
                                 'Stok Keluar telah dikirim oleh ${FirebaseAuth.instance.currentUser!.displayName}',
                             number:
-                                '${DateTime.now().year}-${Random().nextInt(9999)}',
+                                '${DateTime.now().year}-${pia.randomNumber}',
                           ),
                           items: appState.stockOutToInvoiceItem,
                         );
 
-                        final pdfFile = await PdfInvoiceApi.generateStockOutInvoice(invoice);
+                        final pdfFile = await pia.PdfInvoiceApi.generateStockOutInvoice(invoice);
                         PdfApi.openFile(pdfFile);
                       },
                       child: Text('Buat PDF')),

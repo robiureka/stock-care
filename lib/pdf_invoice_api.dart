@@ -14,6 +14,8 @@ import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 import 'package:test_aplikasi_tugas_akhir/utils.dart';
 
+final randomNumber = Random().nextInt(9999);
+
 class PdfInvoiceApi {
   static Future<File> generateStockInInvoice(Invoice invoice) async {
     final pdf = Document();
@@ -35,7 +37,7 @@ class PdfInvoiceApi {
 
     return PdfApi.saveDocument(
         name:
-            '${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now()}-${Random().nextInt(9999)}',
+            '${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$randomNumber.pdf',
         pdf: pdf);
   }
 
@@ -59,7 +61,7 @@ class PdfInvoiceApi {
 
     return PdfApi.saveDocument(
         name:
-            '${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}-${Random().nextInt(9999)}.pdf',
+            '${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$randomNumber.pdf',
         pdf: pdf);
   }
 
