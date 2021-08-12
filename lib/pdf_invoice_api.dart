@@ -6,8 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
-import 'package:provider/provider.dart';
-import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
+
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
@@ -117,7 +116,7 @@ class PdfInvoiceApi {
       );
 
   static Widget buildInvoiceInfo(InvoiceInfo info) {
-    final format = new DateFormat('dd-MMM-yyyy');
+    // final format = new DateFormat('dd-MMM-yyyy');
 
     final titles = <String>[
       'Invoice Number:',
@@ -305,6 +304,9 @@ class PdfInvoiceApi {
           SizedBox(height: 2 * PdfPageFormat.mm),
           buildSimpleText(
               title: 'Email Administrator:', value: 'urekarobby@gmail.com'),
+          SizedBox(height: 1 * PdfPageFormat.mm),
+          buildSimpleText(
+              title: 'Metode Pembayaran:', value: 'Transfer ke Rek BNI A.N. CV. Stok Care Indo 9837378749'),
           SizedBox(height: 1 * PdfPageFormat.mm),
         ],
       );

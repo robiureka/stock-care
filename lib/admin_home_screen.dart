@@ -129,6 +129,41 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                     ),
                   ),
                 ),
+                InkWell(
+                  onTap: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => AdminStocksScreen()));
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: Container(
+                      color: Theme.of(context).primaryColor,
+                      child: Center(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.picture_as_pdf,
+                            size: 80,
+                            color: Theme.of(context).buttonColor,
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Text(
+                            'Reports',
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).buttonColor),
+                          )
+                        ],
+                      )),
+                    ),
+                  ),
+                ),
                 
                 InkWell(
                   onTap: () {

@@ -3,9 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_stock_available_listView.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_stock_in_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_listView.dart';
 
 
 class AdminStockAvailableTabView extends StatefulWidget {

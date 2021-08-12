@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/edit_stock_available_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_available_detail_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_in_detail_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/edit_stock_out_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_out_detail_screen.dart';
 
@@ -99,27 +96,27 @@ class _AdminStockOutListViewState
                             child: Slidable(
                               actionPane: SlidableScrollActionPane(),
                               actions: [
-                                // IconSlideAction(
-                                //   color: Colors.green,
-                                //   caption: 'Edit',
-                                //   icon: Icons.edit,
-                                //   onTap: () {
-                                //     Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             EditStockAvailableScreen(
-                                //           name: stock.name!,
-                                //           stockCode: stock.stockCode!,
-                                //           incomingFunds: stock.incomingFunds!,
-                                //           price: stock.price!,
-                                //           quantity: stock.quantity!,
-                                //           documentID: document.reference.id,
-                                //         ),
-                                //       ),
-                                //     );
-                                //   },
-                                // ),
+                                IconSlideAction(
+                                  color: Colors.green,
+                                  caption: 'Edit',
+                                  icon: Icons.edit,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditStockOutScreen(
+                                          name: stock.name!,
+                                          stock: stock,
+                                          incomingFunds: stock.incomingFunds!,
+                                          price: stock.price!,
+                                          quantity: stock.quantity!,
+                                          documentID: document.reference.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                                 IconSlideAction(
                                   color: Colors.red,
                                   caption: 'Delete',

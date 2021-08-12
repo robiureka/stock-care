@@ -3,14 +3,14 @@ import 'package:test_aplikasi_tugas_akhir/admin_stock_available_tabView.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_stock_in_tabView.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_stock_out_tabView.dart';
 
-class AdminStocksScreen extends StatefulWidget {
-  const AdminStocksScreen({Key? key}) : super(key: key);
+class AdminReportsScreen extends StatefulWidget {
+  const AdminReportsScreen({Key? key}) : super(key: key);
 
   @override
-  _AdminStocksScreenState createState() => _AdminStocksScreenState();
+  _AdminReportsScreenState createState() => _AdminReportsScreenState();
 }
 
-class _AdminStocksScreenState extends State<AdminStocksScreen>
+class _AdminReportsScreenState extends State<AdminReportsScreen>
     with SingleTickerProviderStateMixin {
 
   int selectedIndex = 1;

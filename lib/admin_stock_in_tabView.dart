@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_stock_in_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_in_listView.dart';
 
 class AdminStockInTabView extends StatefulWidget {
   const AdminStockInTabView({Key? key}) : super(key: key);

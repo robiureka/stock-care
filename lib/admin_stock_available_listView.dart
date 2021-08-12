@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -97,27 +96,27 @@ class _AdminStockAvailableListViewState
                             child: Slidable(
                               actionPane: SlidableScrollActionPane(),
                               actions: [
-                                // IconSlideAction(
-                                //   color: Colors.green,
-                                //   caption: 'Edit',
-                                //   icon: Icons.edit,
-                                //   onTap: () {
-                                //     Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             EditStockAvailableScreen(
-                                //           name: stock.name!,
-                                //           stockCode: stock.stockCode!,
-                                //           expectedIncome: stock.expectedIncome!,
-                                //           price: stock.price!,
-                                //           quantity: stock.quantity!,
-                                //           documentID: document.reference.id,
-                                //         ),
-                                //       ),
-                                //     );
-                                //   },
-                                // ),
+                                IconSlideAction(
+                                  color: Colors.green,
+                                  caption: 'Edit',
+                                  icon: Icons.edit,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditStockAvailableScreen(
+                                          name: stock.name!,
+                                          stockCode: stock.stockCode!,
+                                          expectedIncome: stock.expectedIncome!,
+                                          price: stock.price!,
+                                          quantity: stock.quantity!,
+                                          documentID: document.reference.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                                 IconSlideAction(
                                   color: Colors.red,
                                   caption: 'Delete',

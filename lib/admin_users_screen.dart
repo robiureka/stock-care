@@ -2,10 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
-import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_users_listView.dart';
 
 class AdminUsersScreen extends StatefulWidget {

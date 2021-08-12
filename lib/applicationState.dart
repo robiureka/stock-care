@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
-import 'package:test_aplikasi_tugas_akhir/wrapper.dart';
 
 class ApplicationState extends ChangeNotifier {
   String? _email = 'unknown', _username = "no name", _stockAvailableDocID;
@@ -115,7 +114,6 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'ekspektasi keuntungan': expectedIncome,
-      'username': username,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -155,7 +153,6 @@ class ApplicationState extends ChangeNotifier {
       'nama perusahaan': companyName,
       'nomor supplier': phoneNumber,
       'alamat perusahaan': companyAddress,
-      'username': FirebaseAuth.instance.currentUser!.displayName,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -201,7 +198,6 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'dana keluar': outflows,
-      'username': FirebaseAuth.instance.currentUser!.displayName,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -243,7 +239,6 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'dana masuk': incomingFunds,
-      'username': FirebaseAuth.instance.currentUser!.displayName,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
