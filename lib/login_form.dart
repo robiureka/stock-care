@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_aplikasi_tugas_akhir/admin_home_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/auth.dart';
 import 'package:test_aplikasi_tugas_akhir/database.dart';
@@ -123,7 +124,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
+                                builder: (context) => (isOwner!) ? HomeScreen() : AdminHomeScreen()));
                         _loginFormKey.currentState!.reset();
                       } catch (e) {
                         return showDialog(

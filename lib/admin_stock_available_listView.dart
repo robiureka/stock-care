@@ -1,35 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/edit_stock_out_screen.dart';
-import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
+import 'package:test_aplikasi_tugas_akhir/edit_stock_available_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_available_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_out_detail_screen.dart';
 
-class StockOutListView extends StatefulWidget {
+class AdminStockAvailableListView extends StatefulWidget {
   final String filter;
-  const StockOutListView({ Key? key,required this.filter }) : super(key: key);
+  const AdminStockAvailableListView({Key? key, required this.filter})
+      : super(key: key);
 
   @override
-  _StockOutListViewState createState() => _StockOutListViewState();
+  _AdminStockAvailableListViewState createState() =>
+      _AdminStockAvailableListViewState();
 }
 
-class _StockOutListViewState extends State<StockOutListView> {
- FirebaseFirestore db = FirebaseFirestore.instance;
-  List<Stock> _stockOutList = [];
-    List<InvoiceItem> _stockOutInvoiceItemList = [];
+class _AdminStockAvailableListViewState
+    extends State<AdminStockAvailableListView> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  List<Stock> _stockAvailableList = [];
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
       builder: (context, appState, _) => StreamBuilder<QuerySnapshot>(
         stream: db
-            .collection('stock-out')
-            .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .collection('available-stocks')
             .orderBy('created_at', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -41,10 +40,12 @@ class _StockOutListViewState extends State<StockOutListView> {
             return Center(child: CircularProgressIndicator());
           }
 
-          _stockOutList = snapshot.data!.docs.map((e) {
+          _stockAvailableList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
-            return Stock.keluar(
-                incomingFunds: data['dana masuk'],
+            return Stock.adminAvailable(
+                expectedIncome: data['ekspektasi keuntungan'],
+                username: data['username'] ?? "Tidak Ada",
+                uid: data['uid'],
                 name: data['nama barang'],
                 price: data['harga satuan'],
                 quantity: data['kuantitas'],
@@ -55,30 +56,23 @@ class _StockOutListViewState extends State<StockOutListView> {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
             final nameLower = element.name!.toLowerCase();
+            final usernameLower = element.username!.toLowerCase();
+            final uidLower = element.uid!.toLowerCase();
             return stockCodeLower.contains(filterLower) ||
-                nameLower.contains(filterLower);
+                nameLower.contains(filterLower) ||
+                uidLower.contains(filterLower) || usernameLower.contains(filterLower);
           }).toList();
-          _stockOutInvoiceItemList = _stockOutList.map((e) {
-            return InvoiceItem.keluar(
-                name: e.name,
-                stockCode: e.stockCode,
-                quantity: e.quantity,
-                incomingFunds: e.incomingFunds,
-                price: e.price);
-          }).toList();
-          appState.setStockOutToInvoiceItem = _stockOutInvoiceItemList;
-          print(appState.stockOutToInvoiceItem);
-          _stockOutList
+          _stockAvailableList
               .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          return (_stockOutList.isEmpty)
+          return (_stockAvailableList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
                 )
               : ListView.builder(
-                  itemCount: _stockOutList.length,
+                  itemCount: _stockAvailableList.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Stock stock = _stockOutList[index];
+                    Stock stock = _stockAvailableList[index];
                     DocumentSnapshot document = snapshot.data!.docs[index];
                     return Container(
                       padding: EdgeInsets.all(5.0),
@@ -86,12 +80,12 @@ class _StockOutListViewState extends State<StockOutListView> {
                       child: InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => StockOutDetailScreen(
+                              builder: (context) => StockAvailableDetailScreen(
                                     name: stock.name,
                                     stockCode: stock.stockCode,
                                     quantity: stock.quantity,
                                     price: stock.price,
-                                    incomingFunds: stock.incomingFunds,
+                                    expectedIncome: stock.expectedIncome,
                                     createdAt: stock.createdAt,
                                     updatedAt: stock.updatedAt,
                                   )));
@@ -111,10 +105,10 @@ class _StockOutListViewState extends State<StockOutListView> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            EditStockOutScreen(
+                                            EditStockAvailableScreen(
                                           name: stock.name!,
-                                          stock: stock,
-                                          incomingFunds: stock.incomingFunds!,
+                                          stockCode: stock.stockCode!,
+                                          expectedIncome: stock.expectedIncome!,
                                           price: stock.price!,
                                           quantity: stock.quantity!,
                                           documentID: document.reference.id,
@@ -129,7 +123,7 @@ class _StockOutListViewState extends State<StockOutListView> {
                                   icon: Icons.delete,
                                   onTap: () async {
                                     await document.reference.delete();
-                                    _stockOutList
+                                    _stockAvailableList
                                         .remove(document.reference.id);
                                   },
                                 ),
@@ -140,6 +134,15 @@ class _StockOutListViewState extends State<StockOutListView> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
+                                    Text(
+                                        "UserID : ${stock.uid ?? "Tidak Ada"}"),
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    Text(stock.username ?? "tidak ada"),
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
                                     Text(stock.name!),
                                     SizedBox(
                                       height: 8.0,
@@ -165,14 +168,14 @@ class _StockOutListViewState extends State<StockOutListView> {
                                       children: <Widget>[
                                         Flexible(
                                           flex: 3,
-                                          child: Text('Dana Masuk'),
+                                          child: Text('Ekspektasi Keuntungan'),
                                         ),
                                         Flexible(
                                           flex: 3,
                                           child: Text(NumberFormat.currency(
                                                   locale: 'in ',
                                                   decimalDigits: 0)
-                                              .format(stock.incomingFunds)
+                                              .format(stock.expectedIncome)
                                               .toString()),
                                         ),
                                       ],

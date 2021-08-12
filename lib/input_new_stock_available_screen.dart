@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -155,6 +156,7 @@ class _InputNewStockScreenState extends State<InputNewStockScreen> {
                                 name: _name,
                                 price: _price,
                                 stockCode: _stockCode,
+                                username: FirebaseAuth.instance.currentUser!.displayName,
                               );
                               Navigator.pop(context);
                             } catch (e) {

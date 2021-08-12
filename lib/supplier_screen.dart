@@ -38,8 +38,9 @@ class SupplierScreen extends StatelessWidget {
         child: Consumer<ApplicationState>(
           builder: (context, appState, _) => StreamBuilder<QuerySnapshot>(
               stream: db
-                  .collection(
-                      'users/${FirebaseAuth.instance.currentUser!.uid}/supplier-list')
+                  .collection('supplier')
+                  .where('uid',
+                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                   .orderBy('nama supplier', descending: false)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -66,7 +67,7 @@ class SupplierScreen extends StatelessWidget {
                     updatedAt: data['updated_at'],
                   );
                 }).toList();
-                 _temporarySupplierList = _supplierList.map((e) {
+                _temporarySupplierList = _supplierList.map((e) {
                   return e.personName!;
                 }).toList();
                 appState.setSupplierList = _temporarySupplierList;

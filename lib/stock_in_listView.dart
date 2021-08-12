@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_stock_in_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_in_detail_screen.dart';
 
@@ -20,6 +21,7 @@ class StockInListView extends StatefulWidget {
 class _StockInListViewState extends State<StockInListView> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<Stock> _stockInList = [];
+  List<InvoiceItem> _stockInInvoiceItemList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class _StockInListViewState extends State<StockInListView> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-
+          
           _stockInList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
 
@@ -55,9 +57,21 @@ class _StockInListViewState extends State<StockInListView> {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
             final nameLower = element.name!.toLowerCase();
+            final supplierNameLower = element.supplierName!.toLowerCase();
             return stockCodeLower.contains(filterLower) ||
-                nameLower.contains(filterLower);
+                nameLower.contains(filterLower) || supplierNameLower.contains(filterLower);
           }).toList();
+          _stockInInvoiceItemList = _stockInList.map((e) {
+            return InvoiceItem.masuk(
+                name: e.name,
+                stockCode: e.stockCode,
+                quantity: e.quantity,
+                outflows: e.outflows,
+                supplierName: e.supplierName,
+                price: e.price);
+          }).toList();
+          appState.setStockInToInvoiceItem = _stockInInvoiceItemList;
+          print(appState.stockInToInvoiceItem);
           _stockInList.sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
           return (_stockInList.isEmpty)
               ? Center(

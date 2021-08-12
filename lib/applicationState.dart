@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
-
 
 class ApplicationState extends ChangeNotifier {
   String? _email = 'unknown', _username = "no name", _stockAvailableDocID;
@@ -26,9 +26,22 @@ class ApplicationState extends ChangeNotifier {
     _stockToStockOutList = stockToStockOutList;
   }
 
+  List<InvoiceItem> _stockInToInvoiceItem = [];
+  List<InvoiceItem> get stockInToInvoiceItem => _stockInToInvoiceItem;
+  set setStockInToInvoiceItem(List<InvoiceItem> stockInToInvoiceItem) {
+    _stockInToInvoiceItem = stockInToInvoiceItem;
+  }
+  
+  List<InvoiceItem> _stockOutToInvoiceItem = [];
+  List<InvoiceItem> get stockOutToInvoiceItem => _stockOutToInvoiceItem;
+  set setStockOutToInvoiceItem(List<InvoiceItem> stockOutToInvoiceItem) {
+    _stockOutToInvoiceItem = stockOutToInvoiceItem;
+  }
+
   Future<void> getSupplier(String uid) async {
     QuerySnapshot docsnapshot = await FirebaseFirestore.instance
-        .collection('users/$uid/supplier-list')
+        .collection('supplier')
+        .where('uid', isEqualTo: uid)
         .get();
     docsnapshot.docs.forEach((element) {
       Map<String, dynamic> data = element.data() as Map<String, dynamic>;
@@ -67,6 +80,7 @@ class ApplicationState extends ChangeNotifier {
     required String? stockCode,
     required int? expectedIncome,
     required int? quantity,
+    required String? username,
     required int? price,
   }) {
     return FirebaseFirestore.instance.collection('available-stocks').add({
@@ -76,6 +90,7 @@ class ApplicationState extends ChangeNotifier {
       'harga satuan': price,
       'ekspektasi keuntungan': expectedIncome,
       'uid': FirebaseAuth.instance.currentUser!.uid,
+      'username': username,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
@@ -87,6 +102,7 @@ class ApplicationState extends ChangeNotifier {
     required int? expectedIncome,
     required int? quantity,
     required int? price,
+    required String? username,
     required String? documentID,
   }) {
     return FirebaseFirestore.instance
@@ -109,15 +125,14 @@ class ApplicationState extends ChangeNotifier {
     required String? companyAddress,
   }) {
     return FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('supplier-list')
+        .collection('supplier')
         .add({
       'nama supplier': personName,
       'nama perusahaan': companyName,
       'nomor supplier': phoneNumber,
       'alamat perusahaan': companyAddress,
       'uid': FirebaseAuth.instance.currentUser!.uid,
+      'username': FirebaseAuth.instance.currentUser!.displayName,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
@@ -131,9 +146,7 @@ class ApplicationState extends ChangeNotifier {
     required String? documentID,
   }) {
     return FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('supplier-list')
+        .collection('supplier')
         .doc(documentID)
         .update({
       'nama supplier': personName,
@@ -160,6 +173,7 @@ class ApplicationState extends ChangeNotifier {
       'harga satuan': price,
       'dana keluar': outflows,
       'uid': FirebaseAuth.instance.currentUser!.uid,
+      'username': FirebaseAuth.instance.currentUser!.displayName,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
@@ -184,7 +198,6 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'dana keluar': outflows,
-      'uid': FirebaseAuth.instance.currentUser!.uid,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }
@@ -203,6 +216,7 @@ class ApplicationState extends ChangeNotifier {
       'harga satuan': price,
       'dana masuk': incomingFunds,
       'uid': FirebaseAuth.instance.currentUser!.uid,
+      'username': FirebaseAuth.instance.currentUser!.displayName,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
@@ -225,7 +239,6 @@ class ApplicationState extends ChangeNotifier {
       'kuantitas': quantity,
       'harga satuan': price,
       'dana masuk': incomingFunds,
-      'uid': FirebaseAuth.instance.currentUser!.uid,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
   }

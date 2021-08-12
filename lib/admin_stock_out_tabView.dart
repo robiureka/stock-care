@@ -1,23 +1,19 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_aplikasi_tugas_akhir/admin_stock_out_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
-import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
-import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart' as pia;
-import 'package:test_aplikasi_tugas_akhir/stock_out_listView.dart';
-import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 
-class StockOutTabView extends StatefulWidget {
-  const StockOutTabView({Key? key}) : super(key: key);
+class AdminStockOutTabView extends StatefulWidget {
+  const AdminStockOutTabView({Key? key}) : super(key: key);
 
   @override
-  _StockOutTabViewState createState() => _StockOutTabViewState();
+  _AdminStockOutTabViewState createState() => _AdminStockOutTabViewState();
 }
 
-class _StockOutTabViewState extends State<StockOutTabView> {
+class _AdminStockOutTabViewState extends State<AdminStockOutTabView> {
   final db = FirebaseFirestore.instance;
   String filter = '';
   Timer? debouncer;
@@ -47,6 +43,7 @@ class _StockOutTabViewState extends State<StockOutTabView> {
                       Expanded(
                         flex: 5,
                         child: TextField(
+                          
                           onChanged: (String? value) async {
                             debounce(() async {
                               setState(() {
@@ -66,41 +63,14 @@ class _StockOutTabViewState extends State<StockOutTabView> {
                           ),
                         ),
                       ),
+                  
                     ],
                   ),
                 ),
                 Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        final date = DateTime.now();
-                        final invoice = Invoice(
-                          user: UserInApp(
-                            username:
-                                FirebaseAuth.instance.currentUser!.displayName,
-                            uid: FirebaseAuth.instance.currentUser!.uid,
-                            email: FirebaseAuth.instance.currentUser!.email,
-                          ),
-                          info: InvoiceInfo(
-                            date: date,
-                            description:
-                                'Stok Keluar telah dikirim oleh ${FirebaseAuth.instance.currentUser!.displayName}',
-                            number:
-                                '${DateTime.now().year}-${pia.randomNumber}',
-                          ),
-                          items: appState.stockOutToInvoiceItem,
-                        );
-
-                        final pdfFile = await pia.PdfInvoiceApi.generateStockOutInvoice(invoice);
-                        PdfApi.openFile(pdfFile);
-                      },
-                      child: Text('Buat PDF')),
-                ),
-                Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 260,
-                    child: StockOutListView(
+                    height: MediaQuery.of(context).size.height - 220,
+                    child: AdminStockOutListView(
                       filter: filter,
                     )),
               ]),
