@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_stock_in_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_in_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 
@@ -19,8 +20,8 @@ class AdminStockInListView extends StatefulWidget {
 
 class _AdminStockInListViewState extends State<AdminStockInListView> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  List<Stock> _stockInList = [];
-
+  List<Stock> _adminStockInList = [];
+  List<InvoiceItem> _adminStockInInvoiceItemList = [];
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
@@ -38,7 +39,7 @@ class _AdminStockInListViewState extends State<AdminStockInListView> {
             return Center(child: CircularProgressIndicator());
           }
 
-          _stockInList = snapshot.data!.docs.map((e) {
+          _adminStockInList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
 
             return Stock.adminMasuk(
@@ -51,7 +52,8 @@ class _AdminStockInListViewState extends State<AdminStockInListView> {
                 supplierName: data['nama supplier'],
                 stockCode: data['kode barang'],
                 createdAt: data['created_at'],
-                updatedAt: data['updated_at']);
+                updatedAt: data['updated_at'],
+                email: data['email']);
           }).where((element) {
             final filterLower = widget.filter.toLowerCase();
             final stockCodeLower = element.stockCode!.toLowerCase();
@@ -62,18 +64,36 @@ class _AdminStockInListViewState extends State<AdminStockInListView> {
             return stockCodeLower.contains(filterLower) ||
                 nameLower.contains(filterLower) ||
                 uidLower.contains(filterLower) ||
-                usernameLower.contains(filterLower) || supplierNameLower.contains(filterLower);
+                usernameLower.contains(filterLower) ||
+                supplierNameLower.contains(filterLower);
           }).toList();
-          _stockInList.sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          return (_stockInList.isEmpty)
+          _adminStockInInvoiceItemList = _adminStockInList.map((e) {
+            return InvoiceItem.masuk(
+                name: e.name,
+                stockCode: e.stockCode,
+                quantity: e.quantity,
+                outflows: e.outflows,
+                supplierName: e.supplierName,
+                price: e.price);
+          }).toList();
+          appState.setAdminStockInToInvoiceItem = _adminStockInInvoiceItemList;
+          if (_adminStockInList.isNotEmpty) {
+            appState.setCustomerName =
+                _adminStockInList[0].username ?? 'tidak ada';
+            appState.setUid = _adminStockInList[0].uid ?? 'tidak ada';
+            appState.setEmail = _adminStockInList[0].email ?? "tidak Ada";
+          }
+          _adminStockInList
+              .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
+          return (_adminStockInList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
                 )
               : ListView.builder(
-                  itemCount: _stockInList.length,
+                  itemCount: _adminStockInList.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Stock stock = _stockInList[index];
+                    Stock stock = _adminStockInList[index];
                     DocumentSnapshot document = snapshot.data!.docs[index];
                     return Container(
                       padding: EdgeInsets.all(5.0),
@@ -126,7 +146,8 @@ class _AdminStockInListViewState extends State<AdminStockInListView> {
                                   icon: Icons.delete,
                                   onTap: () async {
                                     await document.reference.delete();
-                                    _stockInList.remove(document.reference.id);
+                                    _adminStockInList
+                                        .remove(document.reference.id);
                                   },
                                 ),
                               ],

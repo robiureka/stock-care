@@ -6,8 +6,27 @@ import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 
 class ApplicationState extends ChangeNotifier {
-  String? _email = 'unknown', _username = "no name", _stockAvailableDocID;
+  String? _email = 'unknown',
+      _username = "no name",
+      _stockAvailableDocID,
+      _customerName,
+      _uid;
   String _filter = '';
+
+  String get getCustomerName => _customerName!;
+  set setCustomerName(String customerName) {
+    _customerName = customerName;
+  }
+
+  String get getUid => _uid!;
+  set setUid(String uid) {
+    _uid = uid;
+  }
+  String get getEmail => _email!;
+  set setEmail(String email) {
+    _email = email;
+  }
+
   String get stockAvailableDocID => _stockAvailableDocID!;
   List<Stock> _stockAvailableList = [];
   List<Stock> get stockAvailableList {
@@ -31,12 +50,23 @@ class ApplicationState extends ChangeNotifier {
   set setStockInToInvoiceItem(List<InvoiceItem> stockInToInvoiceItem) {
     _stockInToInvoiceItem = stockInToInvoiceItem;
   }
-  
+
   List<InvoiceItem> _stockOutToInvoiceItem = [];
   List<InvoiceItem> get stockOutToInvoiceItem => _stockOutToInvoiceItem;
   set setStockOutToInvoiceItem(List<InvoiceItem> stockOutToInvoiceItem) {
     _stockOutToInvoiceItem = stockOutToInvoiceItem;
   }
+  List<InvoiceItem> _adminStockInToInvoiceItem = [];
+  List<InvoiceItem> get adminStockInToInvoiceItem => _adminStockInToInvoiceItem;
+  set setAdminStockInToInvoiceItem(List<InvoiceItem> adminStockInToInvoiceItem) {
+    _adminStockInToInvoiceItem = adminStockInToInvoiceItem;
+  }
+  List<InvoiceItem> _adminStockOutToInvoiceItem = [];
+  List<InvoiceItem> get adminStockOutToInvoiceItem => _adminStockOutToInvoiceItem;
+  set setAdminStockOutToInvoiceItem(List<InvoiceItem> adminStockOutToInvoiceItem) {
+    _adminStockOutToInvoiceItem = adminStockOutToInvoiceItem;
+  }
+
 
   Future<void> getSupplier(String uid) async {
     QuerySnapshot docsnapshot = await FirebaseFirestore.instance
@@ -54,7 +84,7 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
-  String get getEmail => _email!;
+
 
   String get getUsername => _username!;
 
@@ -62,11 +92,6 @@ class ApplicationState extends ChangeNotifier {
 
   set setFilter(String filter) {
     _filter = filter;
-    notifyListeners();
-  }
-
-  set setEmail(String email) {
-    _email = email;
     notifyListeners();
   }
 
@@ -91,6 +116,7 @@ class ApplicationState extends ChangeNotifier {
       'ekspektasi keuntungan': expectedIncome,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'username': username,
+      'email': FirebaseAuth.instance.currentUser!.email,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
@@ -124,15 +150,14 @@ class ApplicationState extends ChangeNotifier {
     required String? phoneNumber,
     required String? companyAddress,
   }) {
-    return FirebaseFirestore.instance
-        .collection('supplier')
-        .add({
+    return FirebaseFirestore.instance.collection('supplier').add({
       'nama supplier': personName,
       'nama perusahaan': companyName,
       'nomor supplier': phoneNumber,
       'alamat perusahaan': companyAddress,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'username': FirebaseAuth.instance.currentUser!.displayName,
+      'email': FirebaseAuth.instance.currentUser!.email,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
@@ -174,6 +199,7 @@ class ApplicationState extends ChangeNotifier {
       'dana keluar': outflows,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'username': FirebaseAuth.instance.currentUser!.displayName,
+      'email': FirebaseAuth.instance.currentUser!.email,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });
@@ -217,6 +243,7 @@ class ApplicationState extends ChangeNotifier {
       'dana masuk': incomingFunds,
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'username': FirebaseAuth.instance.currentUser!.displayName,
+      'email': FirebaseAuth.instance.currentUser!.email,
       'created_at': DateTime.now().millisecondsSinceEpoch,
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     });

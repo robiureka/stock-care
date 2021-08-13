@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fs;
@@ -7,11 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
-import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart' as pia;
 import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_in_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
-import 'package:path/path.dart';
 
 class StockInTabView extends StatefulWidget {
   const StockInTabView({Key? key}) : super(key: key);
@@ -23,8 +22,9 @@ class StockInTabView extends StatefulWidget {
 class _StockInTabViewState extends State<StockInTabView> {
   final db = FirebaseFirestore.instance;
   String filter = '';
+  int? invoiceNumber;
   Timer? debouncer;
-
+  PdfInvoiceApi pia = PdfInvoiceApi();
   @override
   void initState() {
     super.initState();
@@ -79,6 +79,7 @@ class _StockInTabViewState extends State<StockInTabView> {
                   child: ElevatedButton(
                       onPressed: () async {
                         try {
+                          invoiceNumber = Random().nextInt(9999);
                           final date = DateTime.now();
                           final invoice = Invoice(
                             user: UserInApp(
@@ -92,14 +93,13 @@ class _StockInTabViewState extends State<StockInTabView> {
                               description:
                                   'Invoice ini telah dibuat oleh ${FirebaseAuth.instance.currentUser!.displayName}',
                               number:
-                                  '${DateTime.now().year}-${pia.randomNumber}',
+                                  '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
                             ),
                             items: appState.stockInToInvoiceItem,
                           );
 
                           final pdfFile =
-                              await pia.PdfInvoiceApi.generateStockInInvoice(
-                                  invoice);
+                              await pia.generateStockInInvoice(invoice, invoiceNumber!);
                           fs.Reference ref = fs.FirebaseStorage.instance
                               .ref()
                               .child('reports')
@@ -115,8 +115,13 @@ class _StockInTabViewState extends State<StockInTabView> {
                             'username':
                                 FirebaseAuth.instance.currentUser!.displayName,
                             'download_url': downloadURL,
-                            'invoice number': '${DateTime.now().year}-${pia.randomNumber}'
+                            'invoice_number':
+                                '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
+                            'created_at': DateTime.now().millisecondsSinceEpoch,
+                            'updated_at': DateTime.now().millisecondsSinceEpoch,
+                            'category': 'stock-in'
                           });
+                          setState(() {});
                           PdfApi.openFile(pdfFile);
                         } catch (e) {
                           print(e.toString());

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/edit_stock_out_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_out_detail_screen.dart';
 
@@ -14,15 +15,13 @@ class AdminStockOutListView extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AdminStockOutListViewState createState() =>
-      _AdminStockOutListViewState();
+  _AdminStockOutListViewState createState() => _AdminStockOutListViewState();
 }
 
-class _AdminStockOutListViewState
-    extends State<AdminStockOutListView> {
+class _AdminStockOutListViewState extends State<AdminStockOutListView> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  List<Stock> _stockAvailableList = [];
-
+  List<Stock> _adminStockOutList = [];
+  List<InvoiceItem> _adminStockOutInvoiceItemList = [];
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
@@ -40,7 +39,7 @@ class _AdminStockOutListViewState
             return Center(child: CircularProgressIndicator());
           }
 
-          _stockAvailableList = snapshot.data!.docs.map((e) {
+          _adminStockOutList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
             return Stock.adminKeluar(
                 incomingFunds: data['dana masuk'],
@@ -51,7 +50,8 @@ class _AdminStockOutListViewState
                 quantity: data['kuantitas'],
                 stockCode: data['kode barang'],
                 createdAt: data['created_at'],
-                updatedAt: data['updated_at']);
+                updatedAt: data['updated_at'],
+                email: data['email']);
           }).where((element) {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
@@ -60,19 +60,36 @@ class _AdminStockOutListViewState
             final uidLower = element.uid!.toLowerCase();
             return stockCodeLower.contains(filterLower) ||
                 nameLower.contains(filterLower) ||
-                uidLower.contains(filterLower) || usernameLower.contains(filterLower);
+                uidLower.contains(filterLower) ||
+                usernameLower.contains(filterLower);
           }).toList();
-          _stockAvailableList
+          _adminStockOutInvoiceItemList = _adminStockOutList.map((e) {
+            return InvoiceItem.keluar(
+                name: e.name,
+                stockCode: e.stockCode,
+                quantity: e.quantity,
+                incomingFunds: e.incomingFunds,
+                price: e.price);
+          }).toList();
+          appState.setAdminStockOutToInvoiceItem =
+              _adminStockOutInvoiceItemList;
+          if (_adminStockOutList.isNotEmpty) {
+            appState.setCustomerName = _adminStockOutList[0].username!;
+            appState.setUid = _adminStockOutList[0].uid!;
+            appState.setEmail = _adminStockOutList[0].email ?? "tidak Ada";
+          }
+          print(appState.adminStockOutToInvoiceItem);
+          _adminStockOutList
               .sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
-          return (_stockAvailableList.isEmpty)
+          return (_adminStockOutList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
                 )
               : ListView.builder(
-                  itemCount: _stockAvailableList.length,
+                  itemCount: _adminStockOutList.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Stock stock = _stockAvailableList[index];
+                    Stock stock = _adminStockOutList[index];
                     DocumentSnapshot document = snapshot.data!.docs[index];
                     return Container(
                       padding: EdgeInsets.all(5.0),
@@ -123,7 +140,7 @@ class _AdminStockOutListViewState
                                   icon: Icons.delete,
                                   onTap: () async {
                                     await document.reference.delete();
-                                    _stockAvailableList
+                                    _adminStockOutList
                                         .remove(document.reference.id);
                                   },
                                 ),

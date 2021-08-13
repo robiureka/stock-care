@@ -34,7 +34,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Users'),
+        title: Text('Admin Users'),
       ),
       body: SingleChildScrollView(
         child: Column(children: [

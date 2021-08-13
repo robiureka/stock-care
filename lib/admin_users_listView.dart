@@ -99,7 +99,7 @@ class _AdminUsersListViewState extends State<AdminUsersListView> {
                                   IconSlideAction(
                                     icon: Icons.edit,
                                     color: Colors.green,
-                                    caption: 'Reset Password',
+                                    caption: 'Reset \nPassword',
                                     foregroundColor: Colors.white,
                                     onTap: () async {
                                       bool send = await _auth
