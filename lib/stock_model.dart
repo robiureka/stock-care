@@ -2,7 +2,7 @@ import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 
 class Stock {
   Supplier? supplier;
-  String? name, stockCode, supplierName, username, uid;
+  String? name, stockCode, supplierName, username, uid, email;
   int? quantity,
       expectedIncome,
       price,
@@ -20,6 +20,9 @@ class Stock {
       this.price});
   Stock.available(
       {this.name,
+      this.uid,
+      this.username,
+      this.email,
       this.stockCode,
       this.quantity,
       this.createdAt,
@@ -28,6 +31,9 @@ class Stock {
       this.price});
   Stock.masuk(
       {this.name,
+      this.uid,
+      this.username,
+      this.email,
       this.stockCode,
       this.quantity,
       this.outflows,
@@ -37,6 +43,9 @@ class Stock {
       this.price});
   Stock.keluar(
       {this.name,
+      this.uid,
+      this.username,
+      this.email,
       this.stockCode,
       this.quantity,
       this.createdAt,
@@ -47,6 +56,7 @@ class Stock {
       {this.name,
       this.uid,
       this.username,
+      this.email,
       this.stockCode,
       this.quantity,
       this.createdAt,
@@ -57,6 +67,7 @@ class Stock {
       {this.name,
       this.uid,
       this.username,
+      this.email,
       this.stockCode,
       this.quantity,
       this.outflows,
@@ -68,6 +79,7 @@ class Stock {
       {this.name,
       this.uid,
       this.username,
+      this.email,
       this.stockCode,
       this.quantity,
       this.createdAt,
@@ -75,4 +87,3 @@ class Stock {
       this.incomingFunds,
       this.price});
 }
-

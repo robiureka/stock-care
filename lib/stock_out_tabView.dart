@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
-import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart' as pia;
+import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fs;
 import 'package:test_aplikasi_tugas_akhir/stock_out_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 
@@ -20,7 +22,9 @@ class StockOutTabView extends StatefulWidget {
 class _StockOutTabViewState extends State<StockOutTabView> {
   final db = FirebaseFirestore.instance;
   String filter = '';
+  PdfInvoiceApi pia = PdfInvoiceApi();
   Timer? debouncer;
+  int? invoiceNumber;
   @override
   void initState() {
     super.initState();
@@ -74,26 +78,51 @@ class _StockOutTabViewState extends State<StockOutTabView> {
                   margin: EdgeInsets.symmetric(horizontal: 15.0),
                   child: ElevatedButton(
                       onPressed: () async {
-                        final date = DateTime.now();
-                        final invoice = Invoice(
-                          user: UserInApp(
-                            username:
-                                FirebaseAuth.instance.currentUser!.displayName,
-                            uid: FirebaseAuth.instance.currentUser!.uid,
-                            email: FirebaseAuth.instance.currentUser!.email,
-                          ),
-                          info: InvoiceInfo(
-                            date: date,
-                            description:
-                                'Stok Keluar telah dikirim oleh ${FirebaseAuth.instance.currentUser!.displayName}',
-                            number:
-                                '${DateTime.now().year}-${pia.randomNumber}',
-                          ),
-                          items: appState.stockOutToInvoiceItem,
-                        );
+                        try {
+                          invoiceNumber = Random().nextInt(9999);
+                          final date = DateTime.now();
+                          final invoice = Invoice(
+                            user: UserInApp(
+                              username: FirebaseAuth
+                                  .instance.currentUser!.displayName,
+                              uid: FirebaseAuth.instance.currentUser!.uid,
+                              email: FirebaseAuth.instance.currentUser!.email,
+                            ),
+                            info: InvoiceInfo(
+                              date: date,
+                              description:
+                                  'Stok Keluar telah dikirim oleh ${FirebaseAuth.instance.currentUser!.displayName}',
+                              number:
+                                  '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
+                            ),
+                            items: appState.stockOutToInvoiceItem,
+                          );
 
-                        final pdfFile = await pia.PdfInvoiceApi.generateStockOutInvoice(invoice);
-                        PdfApi.openFile(pdfFile);
+                          final pdfFile = await pia.generateStockOutInvoice(
+                              invoice, invoiceNumber!);
+                          fs.Reference ref = fs.FirebaseStorage.instance
+                              .ref()
+                              .child('reports')
+                              .child(pdfFile.path);
+                          fs.UploadTask task = ref.putFile(pdfFile);
+                          fs.TaskSnapshot snapshot =
+                              await task.whenComplete(() {});
+                          String downloadURL =
+                              await snapshot.ref.getDownloadURL();
+                          await db.collection('reports').add({
+                            'uid': FirebaseAuth.instance.currentUser!.uid,
+                            'username':
+                                FirebaseAuth.instance.currentUser!.displayName,
+                            'download_url': downloadURL,
+                            'invoice_number':
+                                '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
+                            'created_at': DateTime.now().millisecondsSinceEpoch,
+                            'updated_at': DateTime.now().millisecondsSinceEpoch,
+                            'category': 'stock-out'
+                          });
+                          setState(() {});
+                          PdfApi.openFile(pdfFile);
+                        } catch (e) {}
                       },
                       child: Text('Buat PDF')),
                 ),

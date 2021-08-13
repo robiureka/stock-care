@@ -33,7 +33,7 @@ class _AdminSupplierScreenState extends State<AdminSupplierScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Suppliers'),
+        title: Text('Admin Suppliers'),
       ),
       body: SingleChildScrollView(
         child: Column(children: [

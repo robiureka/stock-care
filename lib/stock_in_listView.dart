@@ -52,7 +52,9 @@ class _StockInListViewState extends State<StockInListView> {
                 supplierName: data['nama supplier'],
                 stockCode: data['kode barang'],
                 createdAt: data['created_at'],
-                updatedAt: data['updated_at']);
+                updatedAt: data['updated_at'],
+                username: data['username'],
+                uid: data['uid']);
           }).where((element) {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
@@ -71,6 +73,7 @@ class _StockInListViewState extends State<StockInListView> {
                 price: e.price);
           }).toList();
           appState.setStockInToInvoiceItem = _stockInInvoiceItemList;
+          
           print(appState.stockInToInvoiceItem);
           _stockInList.sort((b, a) => a.createdAt!.compareTo(b.createdAt!));
           return (_stockInList.isEmpty)

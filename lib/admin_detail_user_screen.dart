@@ -15,7 +15,7 @@ class UserDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail Supplier'),
+        title: Text('Detail Users'),
       ),
       body: Container(
         padding: EdgeInsets.all(25.0),

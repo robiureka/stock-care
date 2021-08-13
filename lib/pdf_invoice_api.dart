@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -13,10 +11,9 @@ import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 import 'package:test_aplikasi_tugas_akhir/utils.dart';
 
-final randomNumber = Random().nextInt(9999);
-
 class PdfInvoiceApi {
-  static Future<File> generateStockInInvoice(Invoice invoice) async {
+  Future<File> generateStockInInvoice(
+      Invoice invoice, int invoiceNumber) async {
     final pdf = Document();
 
     pdf.addPage(MultiPage(
@@ -29,6 +26,18 @@ class PdfInvoiceApi {
           buildInvoiceStockIn(invoice),
           Divider(),
           buildTotal(invoice),
+          pw.SizedBox(child: pw.Container(
+            child: pw.Row(
+              children: [
+                pw.Spacer(flex: 6),
+                pw.Expanded(
+                  flex: 4,
+                  child: buildText(title: 'Status: ',value: '*Invoice ini belum dibayar'),
+                )
+              ],
+            ),
+          ), height: 1 * PdfPageFormat.cm),
+          
         ];
       },
       footer: (context) => buildFooter(invoice),
@@ -36,13 +45,49 @@ class PdfInvoiceApi {
 
     return PdfApi.saveDocument(
         name:
-            '${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$randomNumber.pdf',
+            'Stok-Masuk-${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
+        pdf: pdf);
+  }
+  Future<File> generateStockInInvoiceByAdmin(
+      Invoice invoice, int invoiceNumber) async {
+    final pdf = Document();
+
+    pdf.addPage(MultiPage(
+      build: (context) {
+        return [
+          buildTitle(invoice),
+          SizedBox(height: 1 * PdfPageFormat.cm),
+          buildHeader(invoice),
+          SizedBox(height: 1 * PdfPageFormat.cm),
+          buildInvoiceStockIn(invoice),
+          Divider(),
+          buildTotal(invoice),
+          pw.SizedBox(child: pw.Container(
+            child: pw.Row(
+              children: [
+                pw.Spacer(flex: 6),
+                pw.Expanded(
+                  flex: 4,
+                  child: buildText(title: 'Status: ',value: '*Invoice ini sudah dibayar'),
+                )
+              ],
+            ),
+          ), height: 1 * PdfPageFormat.cm),
+          
+        ];
+      },
+      footer: (context) => buildFooter(invoice),
+    ));
+
+    return PdfApi.saveDocument(
+        name:
+            'Stok-Masuk-${invoice.user!.username}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
         pdf: pdf);
   }
 
-  static Future<File> generateStockOutInvoice(Invoice invoice) async {
+  Future<File> generateStockOutInvoice(
+      Invoice invoice, int invoiceNumber) async {
     final pdf = Document();
-
     pdf.addPage(MultiPage(
       build: (context) {
         return [
@@ -60,11 +105,34 @@ class PdfInvoiceApi {
 
     return PdfApi.saveDocument(
         name:
-            '${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$randomNumber.pdf',
+            'Stok-Keluar-${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
+        pdf: pdf);
+  }
+  Future<File> generateStockOutInvoiceByAdmin(
+      Invoice invoice, int invoiceNumber) async {
+    final pdf = Document();
+    pdf.addPage(MultiPage(
+      build: (context) {
+        return [
+          buildTitle(invoice),
+          SizedBox(height: 1 * PdfPageFormat.cm),
+          buildHeader(invoice),
+          SizedBox(height: 1 * PdfPageFormat.cm),
+          buildInvoiceStockOut(invoice),
+          Divider(),
+          buildTotal(invoice),
+        ];
+      },
+      footer: (context) => buildFooter(invoice),
+    ));
+
+    return PdfApi.saveDocument(
+        name:
+            'Stok-Keluar-${invoice.user!.username}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
         pdf: pdf);
   }
 
-  static Widget buildHeader(Invoice invoice) => Column(
+  Widget buildHeader(Invoice invoice) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -93,7 +161,7 @@ class PdfInvoiceApi {
         ],
       );
 
-  static Widget buildCustomerAddress(UserInApp userInApp) => Column(
+  Widget buildCustomerAddress(UserInApp userInApp) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(userInApp.username!,
@@ -103,7 +171,7 @@ class PdfInvoiceApi {
           Text(userInApp.email!),
         ],
       );
-  static Widget buildSupplierAddress(Supplier supplier) => Column(
+  Widget buildSupplierAddress(Supplier supplier) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(supplier.personName!,
@@ -115,7 +183,7 @@ class PdfInvoiceApi {
         ],
       );
 
-  static Widget buildInvoiceInfo(InvoiceInfo info) {
+  Widget buildInvoiceInfo(InvoiceInfo info) {
     // final format = new DateFormat('dd-MMM-yyyy');
 
     final titles = <String>[
@@ -139,7 +207,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildTitle(Invoice invoice) => Container(
+  Widget buildTitle(Invoice invoice) => Container(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -154,7 +222,7 @@ class PdfInvoiceApi {
         ],
       ));
 
-  static Widget buildInvoiceStockIn(Invoice invoice) {
+  Widget buildInvoiceStockIn(Invoice invoice) {
     final headers = [
       'Nama Barang',
       'Kode Barang',
@@ -203,7 +271,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildInvoiceStockOut(Invoice invoice) {
+  Widget buildInvoiceStockOut(Invoice invoice) {
     final headers = [
       'Nama Barang',
       'Kode Barang',
@@ -250,7 +318,18 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildTotal(Invoice invoice) {
+  // Widget buildNoteInfo() {
+  //   return pw.Container(
+  //       child: pw.Row(children: [
+  //     pw.Spacer(flex: 6),
+  //     pw.Expanded(
+  //       flex: 4,
+  //       child: buildText(value: '*Invoice ini belum dibayar'),
+  //     )
+  //   ]));
+  // }
+
+  Widget buildTotal(Invoice invoice) {
     final netTotal = invoice.items!
         .map((item) => item.price! * item.quantity!)
         .reduce((item1, item2) => item1 + item2);
@@ -293,7 +372,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildFooter(Invoice invoice) => Column(
+  Widget buildFooter(Invoice invoice) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Divider(),
@@ -306,12 +385,13 @@ class PdfInvoiceApi {
               title: 'Email Administrator:', value: 'urekarobby@gmail.com'),
           SizedBox(height: 1 * PdfPageFormat.mm),
           buildSimpleText(
-              title: 'Metode Pembayaran:', value: 'Transfer ke Rek BNI A.N. CV. Stok Care Indo 9837378749'),
+              title: 'Metode Pembayaran:',
+              value: 'Transfer ke Rek BNI A.N. CV. Stok Care Indo 9837378749'),
           SizedBox(height: 1 * PdfPageFormat.mm),
         ],
       );
 
-  static buildSimpleText({
+  buildSimpleText({
     required String title,
     required String value,
   }) {
@@ -328,7 +408,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static buildText({
+  buildText({
     required String title,
     required String value,
     double width = double.infinity,

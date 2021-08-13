@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_aplikasi_tugas_akhir/admin_reports_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_stocks_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
@@ -131,10 +132,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 ),
                 InkWell(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => AdminStocksScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdminReportsScreen()));
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15.0),

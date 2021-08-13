@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_stock_available_tabView.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_stock_in_tabView.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_stock_out_tabView.dart';
+import 'package:test_aplikasi_tugas_akhir/admin_stock_out_reports_tabView.dart';
+import 'package:test_aplikasi_tugas_akhir/admin_stock_in_reports_tabView.dart';
 
 class AdminReportsScreen extends StatefulWidget {
   const AdminReportsScreen({Key? key}) : super(key: key);
@@ -13,8 +12,7 @@ class AdminReportsScreen extends StatefulWidget {
 class _AdminReportsScreenState extends State<AdminReportsScreen>
     with SingleTickerProviderStateMixin {
 
-  int selectedIndex = 1;
-  String filter = '';
+  int selectedIndex = 0;
   // TabController? _tabController;
 
   @override
@@ -25,11 +23,11 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       initialIndex: selectedIndex,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Admin Stocks'),
+          title: Text('Admin Reports'),
           centerTitle: true,
         
           bottom: TabBar(
@@ -44,17 +42,13 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
                 ),
                 Tab(
                   child:
-                      Text('Stok Tersedia', style: TextStyle(fontSize: 13.0)),
-                ),
-                Tab(
-                  child: Text('Stok Keluar', style: TextStyle(fontSize: 13.0)),
+                      Text('Stok Keluar', style: TextStyle(fontSize: 13.0)),
                 ),
               ]),
         ),
         body: TabBarView(children: [
-          AdminStockInTabView(),
-          AdminStockAvailableTabView(),
-          AdminStockOutTabView(),
+          AdminStockInReportsTabView(),
+          AdminStockOutReportsTabView(),
         ]),
       ),
     );

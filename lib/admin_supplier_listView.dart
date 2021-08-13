@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
+import 'package:test_aplikasi_tugas_akhir/edit_supplier_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdminSupplierListView extends StatefulWidget {
   final String filter;
@@ -18,6 +20,11 @@ class AdminSupplierListView extends StatefulWidget {
 class _AdminSupplierListViewState extends State<AdminSupplierListView> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<Supplier> _supplierList = [];
+
+  void launchWhatsapp({required String number, required String message}) async {
+    String url = "whatsapp://send?phone=$number&text=$message";
+    await canLaunch(url) ? launch(url) : print("Tidak Bisa Membuka WhatsApp");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +75,11 @@ class _AdminSupplierListViewState extends State<AdminSupplierListView> {
                       padding: EdgeInsets.all(5.0),
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
                       child: InkWell(
+                        onLongPress: () {
+                          launchWhatsapp(
+                              number: supplier.phoneNumber!,
+                              message: 'Halo Saya Admin\n Ingin memberikan invoice permintaan barang yang sudah dibayar yang ditujukan kepada anda sebagai supplier');
+                        },
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => SupplierDetailScreen(
@@ -82,27 +94,29 @@ class _AdminSupplierListViewState extends State<AdminSupplierListView> {
                             child: Slidable(
                               actionPane: SlidableScrollActionPane(),
                               actions: [
-                                // IconSlideAction(
-                                //   color: Colors.green,
-                                //   caption: 'Edit',
-                                //   icon: Icons.edit,
-                                //   onTap: () {
-                                //     Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             EditStockAvailableScreen(
-                                //           name: stock.name!,
-                                //           stockCode: stock.stockCode!,
-                                //           expectedIncome: stock.expectedIncome!,
-                                //           price: stock.price!,
-                                //           quantity: stock.quantity!,
-                                //           documentID: document.reference.id,
-                                //         ),
-                                //       ),
-                                //     );
-                                //   },
-                                // ),
+                                IconSlideAction(
+                                  color: Colors.green,
+                                  caption: 'Edit',
+                                  icon: Icons.edit,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditSupplierScreen(
+                                                  personName:
+                                                      supplier.personName,
+                                                  companyName:
+                                                      supplier.companyName,
+                                                  phoneNumber:
+                                                      supplier.phoneNumber,
+                                                  companyAddress:
+                                                      supplier.companyAddress,
+                                                  documentID:
+                                                      document.reference.id)),
+                                    );
+                                  },
+                                ),
                                 IconSlideAction(
                                   color: Colors.red,
                                   caption: 'Delete',
@@ -128,6 +142,10 @@ class _AdminSupplierListViewState extends State<AdminSupplierListView> {
                                       height: 8.0,
                                     ),
                                     Text(supplier.companyAddress!.toString()),
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    Text(supplier.phoneNumber!.toString()),
                                     SizedBox(
                                       height: 8.0,
                                     ),
