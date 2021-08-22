@@ -121,6 +121,7 @@ class _UsernamePasswordFieldState extends State<UsernamePasswordField> {
                         // print(userOrError);
                         appState.setusername = userOrError.displayName;
                         await appState.getSupplier(userOrError.uid);
+                        await appState.getSupplierObject(userOrError.uid);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

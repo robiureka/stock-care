@@ -78,7 +78,7 @@ class _AdminSupplierListViewState extends State<AdminSupplierListView> {
                         onLongPress: () {
                           launchWhatsapp(
                               number: supplier.phoneNumber!,
-                              message: 'Halo Saya Admin\n Ingin memberikan invoice permintaan barang yang sudah dibayar yang ditujukan kepada anda sebagai supplier');
+                              message: 'Halo Saya Admin\n Ingin memberikan invoice permintaan barang yang sudah dibayar yang ditujukan kepada anda sebagai supplier. \n\nMohon kirimkan stok barang kepada penerima yang tertera di dalam invoice.');
                         },
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(

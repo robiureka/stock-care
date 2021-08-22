@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
+import 'package:test_aplikasi_tugas_akhir/low_stock_available_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/profile_screen.dart';
+import 'package:test_aplikasi_tugas_akhir/reports_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/supplier_screen.dart';
 
 class OwnerDrawer extends StatelessWidget {
@@ -42,11 +44,29 @@ class OwnerDrawer extends StatelessWidget {
           ),
           SizedBox(height: 10.0),
           ListTile(
+            leading: Icon(Icons.dashboard),
+            title: Text('Low Stock'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LowStockAvailableScreen()));
+            },
+          ),
+          SizedBox(height: 10.0),
+          ListTile(
             leading: Icon(Icons.people),
             title: Text('Supplier'),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SupplierScreen()));
+            },
+          ),
+          SizedBox(height: 10.0),
+          ListTile(
+            leading: Icon(Icons.picture_as_pdf),
+            title: Text('Reports'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ReportsScreen()));
             },
           ),
           SizedBox(height: 10.0),

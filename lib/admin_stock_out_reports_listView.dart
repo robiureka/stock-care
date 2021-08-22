@@ -34,6 +34,7 @@ class _AdminStockOutReportsListViewState
           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: db
             .collection('reports')
+            .where('created_by', isEqualTo: 'admin')
             .where('category', isEqualTo: 'stock-out')
             // .orderBy('created_at', descending: true)
             .snapshots(),
@@ -50,7 +51,6 @@ class _AdminStockOutReportsListViewState
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
             return Report.stockOut(
                 username: data['username'] ?? "admin",
-                uid: data['uid'],
                 downloadURL: data['download_url'],
                 invoiceNumber: data['invoice_number'],
                 createdBy: data['created_by'] ??  "Pengguna",
@@ -58,11 +58,9 @@ class _AdminStockOutReportsListViewState
           }).where((element) {
             final usernameLower = element.username!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
-            final uidLower = element.uid!.toLowerCase();
             final invoiceNumberLower = element.invoiceNumber!.toLowerCase();
             return usernameLower.contains(filterLower) ||
-                invoiceNumberLower.contains(filterLower) ||
-                uidLower.contains(filterLower);
+                invoiceNumberLower.contains(filterLower);
           }).toList();
           return (_adminStokOutReportsList.isEmpty)
               ? Center(
@@ -104,11 +102,6 @@ class _AdminStockOutReportsListViewState
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(
-                                        "UserID : ${report.uid ?? "Tidak Ada"}"),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
                                     Text(report.username ?? "tidak ada"),
                                     SizedBox(
                                       height: 8.0,

@@ -10,8 +10,11 @@ import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
+import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fs;
+import 'package:test_aplikasi_tugas_akhir/database.dart' as dbService;
+
 class AdminStockInTabView extends StatefulWidget {
   const AdminStockInTabView({Key? key}) : super(key: key);
 
@@ -25,7 +28,8 @@ class _AdminStockInTabViewState extends State<AdminStockInTabView> {
   Timer? debouncer;
   int? invoiceNumber;
   PdfInvoiceApi pia = PdfInvoiceApi();
-    @override
+
+  @override
   void initState() {
     super.initState();
   }
@@ -37,6 +41,7 @@ class _AdminStockInTabViewState extends State<AdminStockInTabView> {
     }
     debouncer = Timer(duration, callback);
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
@@ -50,7 +55,6 @@ class _AdminStockInTabViewState extends State<AdminStockInTabView> {
                       Expanded(
                         flex: 5,
                         child: TextField(
-                          
                           onChanged: (String? value) async {
                             debounce(() async {
                               setState(() {
@@ -70,7 +74,6 @@ class _AdminStockInTabViewState extends State<AdminStockInTabView> {
                           ),
                         ),
                       ),
-                  
                     ],
                   ),
                 ),
@@ -91,7 +94,24 @@ class _AdminStockInTabViewState extends State<AdminStockInTabView> {
                             info: InvoiceInfo(
                               date: date,
                               description:
-                                  'Invoice stok masuk ini telah dibuat oleh Admin untuk diserahkan ke supplier',
+                                  'Invoice stok masuk ini telah dibuat oleh Admin untuk diserahkan ke supplier sebagai bukti bahwa penerima permintaan stok barang yang tertera di bawah sudah membayar tagihan dan supplier diharuskan mengirim stok barang kepada penerima stok barang',
+                              number:
+                                  '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
+                            ),
+                            items: appState.adminStockInToInvoiceItem,
+                          );
+                          final invoiceBuktiPenerimaanBarang = Invoice(
+                            user: UserInApp(
+                              username: appState.getCustomerName,
+                              uid: appState.getUid,
+                              email: appState.getEmail,
+                            ),
+                            supplier:
+                                Supplier(personName: appState.getSupplierName),
+                            info: InvoiceInfo(
+                              date: date,
+                              description:
+                                  'Berkas Bukti Penerimaan Stok Barang ditandatangani oleh penerima dan pengirim barang dan dikirim kembali ke admin oleh supplier',
                               number:
                                   '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
                             ),
@@ -99,31 +119,38 @@ class _AdminStockInTabViewState extends State<AdminStockInTabView> {
                           );
 
                           final pdfFile =
-                              await pia.generateStockInInvoiceByAdmin(invoice, invoiceNumber!);
-                          fs.Reference ref = fs.FirebaseStorage.instance
-                              .ref()
-                              .child('reports')
-                              .child(pdfFile.path);
-                          fs.UploadTask task = ref.putFile(pdfFile);
-                          fs.TaskSnapshot snapshot =
-                              await task.whenComplete(() {});
-                          String downloadURL =
-                              await snapshot.ref.getDownloadURL();
-                          await db.collection('reports').add({
-                            'isPaid': true,
-                            'uid': FirebaseAuth.instance.currentUser!.uid,
-                            'username':
-                                FirebaseAuth.instance.currentUser!.displayName,
-                            'download_url': downloadURL,
-                            'invoice_number':
-                                '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
-                            'created_at': DateTime.now().millisecondsSinceEpoch,
-                            'updated_at': DateTime.now().millisecondsSinceEpoch,
-                            'category': 'stock-in',
-                            'created_by': 'admin',
-                          });
-                          setState(() {});
+                              await pia.generateStockInInvoiceByAdmin(
+                                  invoice, invoiceNumber!);
+                          final pdfFile2 =
+                              await pia.generateBuktiPenerimaanBarangByAdmin(
+                                  invoiceBuktiPenerimaanBarang, invoiceNumber!);
+                          await dbService.saveReportStockInByAdmin(pdfFile, invoiceNumber!);
+                          await dbService.saveBuktiPenerimaanBarang(pdfFile2, invoiceNumber!);
+                          // fs.Reference ref = fs.FirebaseStorage.instance
+                          //     .ref()
+                          //     .child('reports')
+                          //     .child(pdfFile.path);
+                          // fs.UploadTask task = ref.putFile(pdfFile);
+                          // fs.TaskSnapshot snapshot =
+                          //     await task.whenComplete(() {});
+                          // String downloadURL =
+                          //     await snapshot.ref.getDownloadURL();
+                          // await db.collection('reports').add({
+                          //   'isPaid': true,
+                          //   'uid': FirebaseAuth.instance.currentUser!.uid,
+                          //   'username':
+                          //       FirebaseAuth.instance.currentUser!.displayName,
+                          //   'download_url': downloadURL,
+                          //   'invoice_number':
+                          //       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
+                          //   'created_at': DateTime.now().millisecondsSinceEpoch,
+                          //   'updated_at': DateTime.now().millisecondsSinceEpoch,
+                          //   'category': 'stock-in',
+                          //   'created_by': 'admin',
+                          // });
+                          // setState(() {});
                           PdfApi.openFile(pdfFile);
+                          PdfApi.openFile(pdfFile2);
                         } catch (e) {
                           print(e.toString());
                         }

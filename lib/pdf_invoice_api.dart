@@ -26,18 +26,21 @@ class PdfInvoiceApi {
           buildInvoiceStockIn(invoice),
           Divider(),
           buildTotal(invoice),
-          pw.SizedBox(child: pw.Container(
-            child: pw.Row(
-              children: [
-                pw.Spacer(flex: 6),
-                pw.Expanded(
-                  flex: 4,
-                  child: buildText(title: 'Status: ',value: '*Invoice ini belum dibayar'),
-                )
-              ],
-            ),
-          ), height: 1 * PdfPageFormat.cm),
-          
+          pw.SizedBox(
+              child: pw.Container(
+                child: pw.Row(
+                  children: [
+                    pw.Spacer(flex: 6),
+                    pw.Expanded(
+                      flex: 4,
+                      child: buildText(
+                          title: 'Status: ',
+                          value: '*Invoice ini belum dibayar'),
+                    )
+                  ],
+                ),
+              ),
+              height: 1 * PdfPageFormat.cm),
         ];
       },
       footer: (context) => buildFooter(invoice),
@@ -48,6 +51,7 @@ class PdfInvoiceApi {
             'Stok-Masuk-${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
         pdf: pdf);
   }
+
   Future<File> generateStockInInvoiceByAdmin(
       Invoice invoice, int invoiceNumber) async {
     final pdf = Document();
@@ -62,18 +66,32 @@ class PdfInvoiceApi {
           buildInvoiceStockIn(invoice),
           Divider(),
           buildTotal(invoice),
-          pw.SizedBox(child: pw.Container(
-            child: pw.Row(
+          pw.SizedBox(
+              child: pw.Container(
+                child: pw.Row(
+                  children: [
+                    pw.Spacer(flex: 6),
+                    pw.Expanded(
+                      flex: 4,
+                      child: buildText(
+                          title: 'Status: ',
+                          value: '*Invoice ini sudah dibayar'),
+                    )
+                  ],
+                ),
+              ),
+              height: 1 * PdfPageFormat.cm),
+          pw.SizedBox(height: 1 * PdfPageFormat.cm),
+          pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.start,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
-                pw.Spacer(flex: 6),
-                pw.Expanded(
-                  flex: 4,
-                  child: buildText(title: 'Status: ',value: '*Invoice ini sudah dibayar'),
-                )
-              ],
-            ),
-          ), height: 1 * PdfPageFormat.cm),
-          
+                pw.Column(children: [
+                  Text("Penerima Barang"),
+                  pw.SizedBox(height: 1.5 * PdfPageFormat.cm),
+                  Text(invoice.user!.username!),
+                ])
+              ])
         ];
       },
       footer: (context) => buildFooter(invoice),
@@ -81,7 +99,76 @@ class PdfInvoiceApi {
 
     return PdfApi.saveDocument(
         name:
-            'Stok-Masuk-${invoice.user!.username}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
+            'Stok-Masuk-By Admin-${invoice.user!.username}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
+        pdf: pdf);
+  }
+
+  Future<File> generateBuktiPenerimaanBarangByAdmin(
+      Invoice invoice, int invoiceNumber) async {
+    final pdf = Document();
+
+    pdf.addPage(MultiPage(
+      build: (context) {
+        return [
+          buildBuktiPenerimaanTitle(invoice),
+          SizedBox(height: 1 * PdfPageFormat.cm),
+          buildBuktiPenerimaanBarangHeader(invoice),
+          SizedBox(height: 1 * PdfPageFormat.cm),
+          buildInvoiceStockIn(invoice),
+          Divider(),
+          buildTotal(invoice),
+          pw.SizedBox(
+              child: pw.Container(
+                child: pw.Row(
+                  children: [
+                    pw.Spacer(flex: 6),
+                    pw.Expanded(
+                      flex: 4,
+                      child: buildText(
+                          title: 'Status: ',
+                          value: '*Invoice ini sudah dibayar'),
+                    )
+                  ],
+                ),
+              ),
+              height: 1 * PdfPageFormat.cm),
+          pw.SizedBox(height: 1 * PdfPageFormat.cm),
+          pw.Row(
+
+              mainAxisSize: pw.MainAxisSize.max,
+              mainAxisAlignment: pw.MainAxisAlignment.start,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Column(
+
+                      children: [
+                        Text("Penerima Barang"),
+                        pw.SizedBox(height: 1.5 * PdfPageFormat.cm),
+                        Text(invoice.user!.username!),
+                      ]),
+                ),
+                pw.Spacer(flex: 6),
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Column(
+
+                      children: [
+                        Text("Pengirim Barang"),
+                        pw.SizedBox(height: 1.5 * PdfPageFormat.cm),
+                        Text(invoice.supplier!.personName!),
+                      ]),
+                ),
+              ])
+        ];
+      },
+      footer: (context) => buildFooter(invoice),
+    ));
+
+    return PdfApi.saveDocument(
+        name:
+            'Bukti-Penerimaan-Barang-By Admin-${invoice.user!.username}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
         pdf: pdf);
   }
 
@@ -108,6 +195,7 @@ class PdfInvoiceApi {
             'Stok-Keluar-${FirebaseAuth.instance.currentUser!.displayName}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
         pdf: pdf);
   }
+
   Future<File> generateStockOutInvoiceByAdmin(
       Invoice invoice, int invoiceNumber) async {
     final pdf = Document();
@@ -128,11 +216,39 @@ class PdfInvoiceApi {
 
     return PdfApi.saveDocument(
         name:
-            'Stok-Keluar-${invoice.user!.username}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
+            'Stok-Keluar-By Admin-${invoice.user!.username}-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}-$invoiceNumber.pdf',
         pdf: pdf);
   }
 
   Widget buildHeader(Invoice invoice) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // buildSupplierAddress(invoice.supplier!),
+              Container(
+                height: 50,
+                width: 50,
+                child: BarcodeWidget(
+                  barcode: Barcode.qrCode(),
+                  data: invoice.info!.number,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 1 * PdfPageFormat.cm),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buildCustomerAddress(invoice.user!),
+              buildInvoiceInfo(invoice.info!),
+            ],
+          ),
+        ],
+      );
+  Widget buildBuktiPenerimaanBarangHeader(Invoice invoice) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -177,9 +293,9 @@ class PdfInvoiceApi {
           Text(supplier.personName!,
               style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 1 * PdfPageFormat.mm),
-          Text(supplier.companyName!),
-          Text(supplier.companyAddress!),
-          Text(supplier.phoneNumber!),
+          // Text(supplier.companyName!),
+          // Text(supplier.companyAddress!),
+          // Text(supplier.phoneNumber!),
         ],
       );
 
@@ -217,7 +333,21 @@ class PdfInvoiceApi {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 0.8 * PdfPageFormat.cm),
-          Text(invoice.info!.description),
+          Text(invoice.info!.description, textAlign: pw.TextAlign.center),
+          SizedBox(height: 0.8 * PdfPageFormat.cm),
+        ],
+      ));
+  Widget buildBuktiPenerimaanTitle(Invoice invoice) => Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        children: [
+          Text(
+            'BUKTI PENERIMAAN BARANG',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 0.8 * PdfPageFormat.cm),
+          Text(invoice.info!.description, textAlign: pw.TextAlign.center),
           SizedBox(height: 0.8 * PdfPageFormat.cm),
         ],
       ));

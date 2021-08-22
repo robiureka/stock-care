@@ -6,6 +6,7 @@ import 'package:test_aplikasi_tugas_akhir/admin_detail_user_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/auth.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdminUsersListView extends StatefulWidget {
   final String filter;
@@ -18,6 +19,12 @@ class AdminUsersListView extends StatefulWidget {
 class _AdminUsersListViewState extends State<AdminUsersListView> {
   AuthService _auth = AuthService();
   FirebaseFirestore db = FirebaseFirestore.instance;
+
+  void launchWhatsapp({required String number, required String message}) async {
+    String url = "whatsapp://send?phone=$number&text=$message";
+    await canLaunch(url) ? launch(url) : print("Tidak Bisa Membuka WhatsApp");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
@@ -51,7 +58,8 @@ class _AdminUsersListViewState extends State<AdminUsersListView> {
               final filterLower = widget.filter.toLowerCase();
               final uidLower = element.uid!.toLowerCase();
               return emailLower.contains(filterLower) ||
-                  nameLower.contains(filterLower) || uidLower.contains(filterLower);
+                  nameLower.contains(filterLower) ||
+                  uidLower.contains(filterLower);
             }).toList();
             return (_userInAppList.isEmpty)
                 ? Center(child: Text('Kosong'))
@@ -65,6 +73,12 @@ class _AdminUsersListViewState extends State<AdminUsersListView> {
                         margin: EdgeInsets.symmetric(
                             vertical: 3.0, horizontal: 10.0),
                         child: InkWell(
+                          onLongPress: () {
+                            launchWhatsapp(
+                                number: userInApp.phoneNumber!,
+                                message:
+                                    '');
+                          },
                           onTap: () {
                             Navigator.push(
                                 context,

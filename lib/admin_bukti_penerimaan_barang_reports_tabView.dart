@@ -2,25 +2,22 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_stock_in_reports_listView.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_user_stock_in_reports_listView.dart';
+import 'package:test_aplikasi_tugas_akhir/admin_bukti_penerimaan_barang_reports_listView.dart';
+import 'package:test_aplikasi_tugas_akhir/admin_stock_out_reports_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
-import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
 
-class AdminStockInReportsTabView extends StatefulWidget {
-  const AdminStockInReportsTabView({Key? key}) : super(key: key);
+class AdminBuktiPenerimaanBarangReportsTabView extends StatefulWidget {
+  const AdminBuktiPenerimaanBarangReportsTabView({Key? key}) : super(key: key);
 
   @override
-  _AdminStockInReportsTabViewState createState() =>
-      _AdminStockInReportsTabViewState();
+  _AdminBuktiPenerimaanBarangReportsTabViewState createState() =>
+      _AdminBuktiPenerimaanBarangReportsTabViewState();
 }
 
-class _AdminStockInReportsTabViewState
-    extends State<AdminStockInReportsTabView> {
+class _AdminBuktiPenerimaanBarangReportsTabViewState
+    extends State<AdminBuktiPenerimaanBarangReportsTabView> {
   final db = FirebaseFirestore.instance;
   String filter = '';
-  int? invoiceNumber;
-  PdfInvoiceApi pia = PdfInvoiceApi();
   Timer? debouncer;
   @override
   void initState() {
@@ -70,11 +67,10 @@ class _AdminStockInReportsTabViewState
                     ],
                   ),
                 ),
-                
                 Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height - 220,
-                    child: AdminStockInReportsListView(
+                    child: AdminBuktiPenerimaanBarangReportsListView(
                       filter: filter,
                     )),
               ]),
