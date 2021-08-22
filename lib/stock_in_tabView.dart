@@ -11,7 +11,7 @@ import 'package:test_aplikasi_tugas_akhir/pdf_api.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_in_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/user_model.dart';
-
+import 'package:test_aplikasi_tugas_akhir/database.dart' as dbService;
 class StockInTabView extends StatefulWidget {
   const StockInTabView({Key? key}) : super(key: key);
 
@@ -100,27 +100,7 @@ class _StockInTabViewState extends State<StockInTabView> {
 
                           final pdfFile =
                               await pia.generateStockInInvoice(invoice, invoiceNumber!);
-                          fs.Reference ref = fs.FirebaseStorage.instance
-                              .ref()
-                              .child('reports')
-                              .child(pdfFile.path);
-                          fs.UploadTask task = ref.putFile(pdfFile);
-                          fs.TaskSnapshot snapshot =
-                              await task.whenComplete(() {});
-                          String downloadURL =
-                              await snapshot.ref.getDownloadURL();
-                          await db.collection('reports').add({
-                            'isPaid': false,
-                            'uid': FirebaseAuth.instance.currentUser!.uid,
-                            'username':
-                                FirebaseAuth.instance.currentUser!.displayName,
-                            'download_url': downloadURL,
-                            'invoice_number':
-                                '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-$invoiceNumber',
-                            'created_at': DateTime.now().millisecondsSinceEpoch,
-                            'updated_at': DateTime.now().millisecondsSinceEpoch,
-                            'category': 'stock-in'
-                          });
+                          await dbService.saveReportStockInByUser(pdfFile, invoiceNumber!);
                           setState(() {});
                           PdfApi.openFile(pdfFile);
                         } catch (e) {

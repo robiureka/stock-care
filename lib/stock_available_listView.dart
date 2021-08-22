@@ -49,7 +49,8 @@ class _StockAvailableListViewState extends State<StockAvailableListView> {
                 quantity: data['kuantitas'],
                 stockCode: data['kode barang'],
                 createdAt: data['created_at'],
-                updatedAt: data['updated_at']);
+                updatedAt: data['updated_at'],
+                documentID: e.reference.id);
           }).where((element) {
             final stockCodeLower = element.stockCode!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();

@@ -2,7 +2,7 @@ import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 
 class Stock {
   Supplier? supplier;
-  String? name, stockCode, supplierName, username, uid, email;
+  String? name, stockCode, supplierName, username, uid, email, documentID;
   int? quantity,
       expectedIncome,
       price,
@@ -28,6 +28,7 @@ class Stock {
       this.createdAt,
       this.updatedAt,
       this.expectedIncome,
+      this.documentID,
       this.price});
   Stock.masuk(
       {this.name,

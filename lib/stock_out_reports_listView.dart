@@ -1,27 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_user_stock_in_report_detail_screen.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/report_model.dart';
-import 'package:test_aplikasi_tugas_akhir/stock_in_report_detail_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AdminStockInReportsListView extends StatefulWidget {
+class StockOutReportsListView extends StatefulWidget {
   final String filter;
-  const AdminStockInReportsListView({Key? key, required this.filter})
+  const StockOutReportsListView({Key? key, required this.filter})
       : super(key: key);
 
   @override
-  _AdminStockInReportsListViewState createState() =>
-      _AdminStockInReportsListViewState();
+  _StockOutReportsListViewState createState() =>
+      _StockOutReportsListViewState();
 }
 
-class _AdminStockInReportsListViewState
-    extends State<AdminStockInReportsListView> {
+class _StockOutReportsListViewState
+    extends State<StockOutReportsListView> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  List<Report> _stockInReportList = [];
+  List<Report> _stockOutReportList = [];
 
   void openPDFFile(String url) async {
     await canLaunch(url) ? launch(url) : print("Tidak Bisa Membuka File");
@@ -34,8 +33,8 @@ class _AdminStockInReportsListViewState
           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: db
             .collection('reports')
-            .where('created_by', isEqualTo: "admin")
-            .where('category', isEqualTo: 'stock-in')
+            .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('category', isEqualTo: 'stock-out')
             .orderBy('created_at', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -47,37 +46,41 @@ class _AdminStockInReportsListViewState
             return Center(child: CircularProgressIndicator());
           }
 
-          _stockInReportList = snapshot.data!.docs.map((e) {
+          _stockOutReportList = snapshot.data!.docs.map((e) {
             Map<String, dynamic> data = e.data() as Map<String, dynamic>;
-            return Report.stockIn(
-                username: data['username'] ?? 'admin',
+            return Report.stockOut(
+                username: data['username'] ?? '',
+                uid: data['uid'],
                 downloadURL: data['download_url'],
                 invoiceNumber: data['invoice_number'],
-                isPaid: data['isPaid'],
                 createdBy: data['created_by'] ?? "Pengguna",
-                createdAt: data['created_at']);
+                createdAt: data['created_at'],
+                updatedAt: data['updated_at'],
+                );
           }).where((element) {
             final usernameLower = element.username!.toLowerCase();
             final filterLower = widget.filter.toLowerCase();
+            final uidLower = element.uid!.toLowerCase();
             final invoiceNumberLower = element.invoiceNumber!.toLowerCase();
             return usernameLower.contains(filterLower) ||
-                invoiceNumberLower.contains(filterLower);
+                invoiceNumberLower.contains(filterLower) ||
+                uidLower.contains(filterLower);
           }).toList();
-          return (_stockInReportList.isEmpty)
+          return (_stockOutReportList.isEmpty)
               ? Center(
                   child: Text('Kosong'),
                 )
               : ListView.builder(
-                  itemCount: _stockInReportList.length,
+                  itemCount: _stockOutReportList.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Report report = _stockInReportList[index];
+                    Report report = _stockOutReportList[index];
                     DocumentSnapshot document = snapshot.data!.docs[index];
                     return Container(
                       padding: EdgeInsets.all(5.0),
                       margin: EdgeInsets.symmetric(horizontal: 10.0),
                       child: InkWell(
-                        onTap: () async {
+                        onTap: () async{
                           // Navigator.of(context).push(MaterialPageRoute(
                           //     builder: (context) => StockAvailableDetailScreen(
                           //           name: stock.name,
@@ -102,7 +105,7 @@ class _AdminStockInReportsListViewState
                                   icon: Icons.delete,
                                   onTap: () async {
                                     await document.reference.delete();
-                                    _stockInReportList
+                                    _stockOutReportList
                                         .remove(document.reference.id);
                                   },
                                 ),
@@ -118,15 +121,6 @@ class _AdminStockInReportsListViewState
                                       height: 8.0,
                                     ),
                                     Text(report.invoiceNumber ?? "tidak ada"),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    Text("Dibuat Oleh: ${(report.createdBy!)}"),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    Text(
-                                        "Status Bayar: ${(report.isPaid!) ? "Sudah" : "Belum"}"),
                                     SizedBox(
                                       height: 8.0,
                                     ),

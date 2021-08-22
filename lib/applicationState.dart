@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:test_aplikasi_tugas_akhir/invoice_model.dart';
 import 'package:test_aplikasi_tugas_akhir/stock_model.dart';
+import 'package:test_aplikasi_tugas_akhir/supplier_model.dart';
 
 class ApplicationState extends ChangeNotifier {
   String? _email = 'unknown',
@@ -12,6 +13,7 @@ class ApplicationState extends ChangeNotifier {
       _customerName,
       _uid;
   String _filter = '';
+  String? _supplierName, _companyName, _phoneNumber, _companyAddress;
 
   String get getCustomerName => _customerName!;
   set setCustomerName(String customerName) {
@@ -22,9 +24,30 @@ class ApplicationState extends ChangeNotifier {
   set setUid(String uid) {
     _uid = uid;
   }
+
   String get getEmail => _email!;
   set setEmail(String email) {
     _email = email;
+  }
+
+  String get getSupplierName => _supplierName!;
+  set setSupplierName(String supplierName) {
+    _supplierName = supplierName;
+  }
+
+  String get getPhoneNumber => _phoneNumber!;
+  set setPhoneNumber(String phoneNumber) {
+    _phoneNumber = phoneNumber;
+  }
+
+  String get getCompanyName => _companyName!;
+  set setCompanyName(String companyName) {
+    _companyName = companyName;
+  }
+
+  String get getCompanyAddress => _companyAddress!;
+  set setCompanyAddress(String companyAddress) {
+    _companyAddress = companyAddress;
   }
 
   String get stockAvailableDocID => _stockAvailableDocID!;
@@ -39,10 +62,21 @@ class ApplicationState extends ChangeNotifier {
     _supplierList = supplierList;
   }
 
+  List<Supplier> _supplierObjectList = [];
+  List<Supplier> get supplierObjectList => _supplierObjectList;
+  set setSupplierObjectList(List<Supplier> supplierObjectList) {
+    _supplierObjectList = supplierObjectList;
+  }
+
   List<Stock> _stockToStockOutList = [];
   List<Stock> get stockToStockOutList => _stockToStockOutList;
   set setStockToStockOutList(List<Stock> stockToStockOutList) {
     _stockToStockOutList = stockToStockOutList;
+  }
+  List<Stock> _lowStockList = [];
+  List<Stock> get lowStockList => _lowStockList;
+  set setLowStockList(List<Stock> lowStockList) {
+    _lowStockList = lowStockList;
   }
 
   List<InvoiceItem> _stockInToInvoiceItem = [];
@@ -56,17 +90,21 @@ class ApplicationState extends ChangeNotifier {
   set setStockOutToInvoiceItem(List<InvoiceItem> stockOutToInvoiceItem) {
     _stockOutToInvoiceItem = stockOutToInvoiceItem;
   }
+
   List<InvoiceItem> _adminStockInToInvoiceItem = [];
   List<InvoiceItem> get adminStockInToInvoiceItem => _adminStockInToInvoiceItem;
-  set setAdminStockInToInvoiceItem(List<InvoiceItem> adminStockInToInvoiceItem) {
+  set setAdminStockInToInvoiceItem(
+      List<InvoiceItem> adminStockInToInvoiceItem) {
     _adminStockInToInvoiceItem = adminStockInToInvoiceItem;
   }
+
   List<InvoiceItem> _adminStockOutToInvoiceItem = [];
-  List<InvoiceItem> get adminStockOutToInvoiceItem => _adminStockOutToInvoiceItem;
-  set setAdminStockOutToInvoiceItem(List<InvoiceItem> adminStockOutToInvoiceItem) {
+  List<InvoiceItem> get adminStockOutToInvoiceItem =>
+      _adminStockOutToInvoiceItem;
+  set setAdminStockOutToInvoiceItem(
+      List<InvoiceItem> adminStockOutToInvoiceItem) {
     _adminStockOutToInvoiceItem = adminStockOutToInvoiceItem;
   }
-
 
   Future<void> getSupplier(String uid) async {
     QuerySnapshot docsnapshot = await FirebaseFirestore.instance
@@ -79,12 +117,23 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
+  Future<void> getSupplierObject(String uid) async {
+    QuerySnapshot docsnapshot = await FirebaseFirestore.instance
+        .collection('supplier')
+        .where('uid', isEqualTo: uid)
+        .get();
+    docsnapshot.docs.forEach((element) {
+      Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+      _supplierObjectList.add(Supplier(
+          personName: data['nama supplier'],
+          phoneNumber: data['nomor supplier']));
+    });
+  }
+
   set setStockAvailableList(List<Stock> stockAvailableList) {
     _stockAvailableList = stockAvailableList;
     notifyListeners();
   }
-
-
 
   String get getUsername => _username!;
 

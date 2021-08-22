@@ -2,21 +2,21 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_aplikasi_tugas_akhir/admin_stock_in_reports_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/admin_user_stock_in_reports_listView.dart';
 import 'package:test_aplikasi_tugas_akhir/applicationState.dart';
 import 'package:test_aplikasi_tugas_akhir/pdf_invoice_api.dart';
+import 'package:test_aplikasi_tugas_akhir/stock_in_reports_listView.dart';
 
-class AdminStockInReportsTabView extends StatefulWidget {
-  const AdminStockInReportsTabView({Key? key}) : super(key: key);
+class StockInReportsTabView extends StatefulWidget {
+  const StockInReportsTabView({Key? key}) : super(key: key);
 
   @override
-  _AdminStockInReportsTabViewState createState() =>
-      _AdminStockInReportsTabViewState();
+  _StockInReportsTabViewState createState() =>
+      _StockInReportsTabViewState();
 }
 
-class _AdminStockInReportsTabViewState
-    extends State<AdminStockInReportsTabView> {
+class _StockInReportsTabViewState
+    extends State<StockInReportsTabView> {
   final db = FirebaseFirestore.instance;
   String filter = '';
   int? invoiceNumber;
@@ -70,11 +70,10 @@ class _AdminStockInReportsTabViewState
                     ],
                   ),
                 ),
-                
                 Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height - 220,
-                    child: AdminStockInReportsListView(
+                    child: StockInReportsListView(
                       filter: filter,
                     )),
               ]),
